@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "categoria": {
+      "type": "categoria",
+      "settings": {}
+    }
+  },
+  "order": ["categoria"]
+}

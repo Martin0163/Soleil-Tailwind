@@ -1,0 +1,164 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "show_announcement_bar": true,
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "separator_color": "#ffd700",
+        "separator_char": "✦",
+        "bar_height": 36,
+        "animation_speed": 30
+      }
+    },
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "badge_text": "Nueva Colección",
+        "heading": "Irradia Tu",
+        "heading_highlight": "Brillo Natural",
+        "description": "Descubre productos de belleza de lujo diseñados para la mujer moderna. Abraza la confianza con nuestra colección curada.",
+        "button_text": "Comprar Ahora",
+        "button_link": "/collections/all",
+        "button_secondary_text": "Explorar Skincare",
+        "button_secondary_link": "/collections/skincare"
+      }
+    },
+    "categories": {
+      "type": "categories",
+      "blocks": {
+        "category-1": {
+          "type": "category",
+          "settings": {
+            "title": "Cuidado de Piel",
+            "collection": "body-mist",
+            "size": "large"
+          }
+        },
+        "category-2": {
+          "type": "category",
+          "settings": {
+            "title": "Maquillaje",
+            "collection": "crema-corporal",
+            "size": "small"
+          }
+        },
+        "category-3": {
+          "type": "category",
+          "settings": {
+            "title": "Cabello",
+            "collection": "fragancias",
+            "size": "small"
+          }
+        },
+        "category-4": {
+          "type": "category",
+          "settings": {
+            "title": "Fragancias",
+            "collection": "gel-antibacterial",
+            "size": "small"
+          }
+        }
+      },
+      "block_order": [
+        "category-1",
+        "category-2",
+        "category-3",
+        "category-4"
+      ],
+      "settings": {
+        "heading": "Compra por Categoría",
+        "subheading": "Encuentra tu rutina de belleza perfecta"
+      }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Los Más Vendidos",
+        "subheading": "Nuestros productos más queridos",
+        "show_subheading": true,
+        "collection": "best-sellers",
+        "products_to_show": 8,
+        "columns": "4",
+        "view_all_text": "Ver Todo",
+        "show_view_all": true,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "story": {
+      "type": "story",
+      "settings": {
+        "badge_text": "Nuestra Historia",
+        "heading": "Belleza que celebra a cada mujer",
+        "description": "En Soleil, creemos que la verdadera belleza irradia desde adentro. Nuestra colección cuidadosamente seleccionada de productos de belleza de lujo está diseñada para realzar tu brillo natural, no ocultarlo. Cada producto está elaborado con los mejores ingredientes y un compromiso con la sustentabilidad.",
+        "button_text": "Conoce Más",
+        "button_link": "/pages/about",
+        "years_number": "10+",
+        "years_text": "Años de Excelencia"
+      }
+    },
+    "trust": {
+      "type": "trust",
+      "blocks": {
+        "trust-1": {
+          "type": "badge",
+          "settings": {
+            "title": "Envío Gratis",
+            "description": "En pedidos mayores a $75",
+            "icon": "truck"
+          }
+        },
+        "trust-2": {
+          "type": "badge",
+          "settings": {
+            "title": "Libre de Crueldad",
+            "description": "Productos 100% veganos",
+            "icon": "heart"
+          }
+        },
+        "trust-3": {
+          "type": "badge",
+          "settings": {
+            "title": "Devoluciones Fáciles",
+            "description": "Política de 30 días",
+            "icon": "refresh"
+          }
+        },
+        "trust-4": {
+          "type": "badge",
+          "settings": {
+            "title": "Pago Seguro",
+            "description": "Checkout encriptado SSL",
+            "icon": "shield"
+          }
+        }
+      },
+      "block_order": [
+        "trust-1",
+        "trust-2",
+        "trust-3",
+        "trust-4"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "hero",
+    "categories",
+    "featured-products",
+    "story",
+    "trust"
+  ]
+}
