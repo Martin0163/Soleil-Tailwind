@@ -1,0 +1,163 @@
+{%- comment -%}
+  Category Card Snippet
+  
+  Parameters:
+  - block: Block object with settings
+  - collection: Collection object
+  - index: Loop index for animation delay
+{%- endcomment -%}
+
+{%- assign delay = index | minus: 1 | times: 100 -%}
+
+<div 
+  class="category-card group{% if block.settings.size == 'large' %} category-card--large{% endif %}"
+  data-animate="fadeInUp"
+  data-animate-delay="{{ delay }}"
+  {{ block.shopify_attributes }}
+>
+  <a href="{{ collection.url | default: '#' }}">
+    <div class="category-card__image-wrapper">
+      {%- if block.settings.image != blank -%}
+        <img 
+          src="{{ block.settings.image | image_url: width: 800 }}" 
+          alt="{{ block.settings.title }}"
+          class="category-card__image"
+          loading="lazy"
+        >
+      {%- elsif collection.image != blank -%}
+        <img 
+          src="{{ collection.image | image_url: width: 800 }}" 
+          alt="{{ collection.title }}"
+          class="category-card__image"
+          loading="lazy"
+        >
+      {%- else -%}
+        {%- comment -%} Placeholder images based on index {%- endcomment -%}
+        {%- case index -%}
+          {%- when 1 -%}
+            <img src="https://images.unsplash.com/photo-1767256046031-743d33937c4e?w=600" alt="{{ block.settings.title }}" class="category-card__image" loading="lazy">
+          {%- when 2 -%}
+            <img src="https://images.unsplash.com/photo-1542452255191-c85a98f2c5d1?w=600" alt="{{ block.settings.title }}" class="category-card__image" loading="lazy">
+          {%- when 3 -%}
+            <img src="https://images.unsplash.com/photo-1608571424266-edeb9bbefdec?w=600" alt="{{ block.settings.title }}" class="category-card__image" loading="lazy">
+          {%- when 4 -%}
+            <img src="https://images.unsplash.com/photo-1727060798714-a1006106f3f8?w=600" alt="{{ block.settings.title }}" class="category-card__image" loading="lazy">
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag: 'category-card__image category-card__image--placeholder' }}
+        {%- endcase -%}
+      {%- endif -%}
+      
+      <div class="category-card__overlay"></div>
+      
+      <div class="category-card__content">
+        <h3 class="category-card__title">{{ block.settings.title | default: collection.title }}</h3>
+        <span class="category-card__link">
+          {{ 'collections.general.view_more' | t | default: 'Ver Más' }}
+          {% render 'icon-arrow-right' %}
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  .category-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-card--large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  @media (max-width: 767px) {
+    .category-card--large {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+  }
+
+  .category-card a {
+    display: block;
+    text-decoration: none;
+  }
+
+  .category-card__image-wrapper {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+  }
+
+  .category-card--large .category-card__image-wrapper {
+    aspect-ratio: 1/1;
+  }
+
+  .category-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .category-card:hover .category-card__image {
+    transform: scale(1.05);
+  }
+
+  .category-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, 
+      rgba(0, 0, 0, 0.6) 0%, 
+      rgba(0, 0, 0, 0.2) 50%, 
+      transparent 100%
+    );
+  }
+
+  .category-card__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+  }
+
+  .category-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .category-card__title {
+      font-size: 1.875rem;
+    }
+  }
+
+  .category-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+  }
+
+  .category-card:hover .category-card__link {
+    color: #FFD700;
+  }
+
+  .category-card__link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .category-card:hover .category-card__link svg {
+    transform: translateX(4px);
+  }
+</style>

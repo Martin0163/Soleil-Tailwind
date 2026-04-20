@@ -1,0 +1,33 @@
+{%- comment -%}
+  Trust Badge Snippet
+  
+  Parameters:
+  - block: Block object with settings
+  - index: Loop index for animation delay
+{%- endcomment -%}
+
+{%- assign delay = index | minus: 1 | times: 100 -%}
+
+<div class="trust-badge" data-animate="fadeInUp" data-animate-delay="{{ delay }}" {{ block.shopify_attributes }}>
+  <h4 class="trust-badge__title">{{ block.settings.title }}</h4>
+  <p class="trust-badge__description">{{ block.settings.description }}</p>
+</div>
+
+<style>
+  .trust-badge {
+    padding: 1rem;
+  }
+
+  .trust-badge__title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .trust-badge__description {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin: 0;
+  }
+</style>

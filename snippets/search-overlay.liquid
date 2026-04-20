@@ -1,0 +1,101 @@
+{%- comment -%}
+  Search Overlay
+{%- endcomment -%}
+
+<div class="search-overlay" id="search-overlay" data-search-overlay>
+  <button class="search-overlay__close" data-search-close aria-label="{{ 'general.accessibility.close' | t }}">
+    {% render 'icon-close' %}
+  </button>
+  
+  <div class="search-overlay__content">
+    <form action="{{ routes.search_url }}" method="get" class="search-overlay__form" role="search">
+      <input type="hidden" name="type" value="product">
+      <input 
+        type="search" 
+        name="q"
+        class="search-overlay__input" 
+        placeholder="{{ 'general.search.placeholder' | t | default: 'Buscar productos...' }}"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        data-search-input
+      >
+    </form>
+    
+    <div class="search-overlay__results" data-search-results>
+      {%- comment -%} Results will be populated via JavaScript {%- endcomment -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .search-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .search-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .search-overlay__close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .search-overlay__close svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .search-overlay__content {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 8rem 1.5rem 1.5rem;
+  }
+
+  .search-overlay__form {
+    width: 100%;
+  }
+
+  .search-overlay__input {
+    width: 100%;
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 300;
+    border: none;
+    border-bottom: 2px solid #000;
+    padding-bottom: 1rem;
+    background: transparent;
+    outline: none;
+  }
+
+  @media (min-width: 768px) {
+    .search-overlay__input {
+      font-size: 3rem;
+    }
+  }
+
+  .search-overlay__input::placeholder {
+    color: #D1D5DB;
+  }
+
+  .search-overlay__results {
+    margin-top: 2rem;
+  }
+</style>

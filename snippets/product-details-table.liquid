@@ -1,0 +1,29 @@
+<table class="details-table">
+  {% if product.metafields.details.fragrance_note %}
+  <tr>
+    <td>Nota de fragancia</td>
+    <td>{{ product.metafields.details.fragrance_note }}</td>
+  </tr>
+  {% endif %}
+
+  {% if product.metafields.details.gender %}
+  <tr>
+    <td>Género</td>
+    <td>{{ product.metafields.details.gender }}</td>
+  </tr>
+  {% endif %}
+
+  {% if product.metafields.details.concentration %}
+  <tr>
+    <td>Concentración</td>
+    <td>{{ product.metafields.details.concentration }}</td>
+  </tr>
+  {% endif %}
+
+  {% if product.metafields.details.alcohol %}
+  <tr>
+    <td>Alcohol</td>
+    <td>{{ product.metafields.details.alcohol }}</td>
+  </tr>
+  {% endif %}
+</table>

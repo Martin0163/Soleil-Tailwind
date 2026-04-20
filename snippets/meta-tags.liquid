@@ -1,0 +1,38 @@
+{%- comment -%}
+  Meta Tags Snippet
+{%- endcomment -%}
+
+{%- if request.page_type == 'product' -%}
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.title | strip_html | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="http:{{ product.featured_image | image_url: width: 1200 }}">
+  <meta property="og:image:secure_url" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+{%- elsif request.page_type == 'collection' -%}
+  <meta property="og:type" content="product.group">
+  <meta property="og:title" content="{{ collection.title | strip_html | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {%- if collection.image -%}
+    <meta property="og:image" content="http:{{ collection.image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ collection.image | image_url: width: 1200 }}">
+  {%- endif -%}
+{%- else -%}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+{%- endif -%}
+
+{%- if page_description -%}
+  <meta property="og:description" content="{{ page_description | escape }}">
+{%- endif -%}
+
+<meta property="og:site_name" content="{{ shop.name }}">
+
+{%- comment -%} Twitter Cards {%- endcomment -%}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title | escape }}">
+{%- if page_description -%}
+  <meta name="twitter:description" content="{{ page_description | escape }}">
+{%- endif -%}

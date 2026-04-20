@@ -1,0 +1,18 @@
+{%- comment -%}
+  Product Card Placeholder (for when no collection is selected)
+{%- endcomment -%}
+
+<article class="product-card product-card--placeholder" data-animate="fadeInUp" data-animate-delay="{{ index | times: 100 }}">
+  <div class="product-card__link">
+    <div class="product-card__image-wrapper">
+      {{ 'image' | placeholder_svg_tag: 'product-card__image product-card__image--placeholder' }}
+    </div>
+    <div class="product-card__info">
+      <p class="product-card__vendor">Marca</p>
+      <h3 class="product-card__title">Nombre del Producto</h3>
+      <div class="product-card__price">
+        <span class="product-card__price--current">$0.00</span>
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,12 @@
+<div class="related-products">
+  {% assign related = product.collections.first.products | where: "id", product.id, false %}
+  <div class="related-grid">
+    {% for item in related limit: 4 %}
+      <a href="{{ item.url }}" class="related-item">
+        <img src="{{ item.featured_image | image_url: width: 400 }}">
+        <p>{{ item.title }}</p>
+        <span>{{ item.price | money }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</div>
