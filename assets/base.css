@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Aquí podrás agregar estilos globales si los necesitas */
+
+/* HEADER — Estilo Soleil */
+header {
+  background-color: #ffffff; /* Fondo blanco elegante */
+  border-bottom: 1px solid rgba(0,0,0,0.1); /* Línea sutil */
+}
+
+header .header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+header nav a {
+  color: #000;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+header nav a:hover {
+  opacity: 1;
+}
