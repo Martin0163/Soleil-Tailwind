@@ -1,13 +1,22 @@
 <header 
   id="site-header"
-  class="header{% if section.settings.sticky_header %} header--sticky{% endif %}"
+  class="header{% if template.name == 'index' %} header--home-transparent header--home-hero{% else %} header--internal{% endif %}"
   data-section-id="{{ section.id }}"
   data-section-type="header"
+  data-home-transparent="{% if template.name == 'index' %}true{% else %}false{% endif %}"
+  style="
+    --header-bg: {{ section.settings.header_bg }};
+    --header-text: {{ section.settings.header_text_color }};
+    --header-icon: {{ section.settings.header_icon_color }};
+    --header-padding-y: {{ section.settings.header_padding_y }}px;
+    --header-padding-x: {{ section.settings.header_padding_x }}px;
+    --header-menu-align: {{ section.settings.menu_alignment }};
+    --header-logo-width: {{ section.settings.logo_width }}px;
+    --announcement-height: {{ section.settings.announcement_bar_height }}px;
+  "
 >
   <div class="header__container">
-    {%- comment -%} Top Row {%- endcomment -%}
     <div class="header__top">
-      {%- comment -%} Mobile Menu Button {%- endcomment -%}
       <button 
         class="header__mobile-btn" 
         data-mobile-menu-open 
@@ -16,7 +25,6 @@
         {% render 'icon-menu' %}
       </button>
 
-      {%- comment -%} Logo {%- endcomment -%}
       <a href="{{ routes.root_url }}" class="header__logo">
         {%- if section.settings.logo != blank -%}
           <img 
@@ -31,58 +39,67 @@
         {%- endif -%}
       </a>
 
-      {%- comment -%} Right Icons {%- endcomment -%}
       <div class="header__icons">
-  <button class="header__icon-btn" data-search-open aria-label="{{ 'general.search.search' | t }}">
-    {% render 'icon-search' %}
-  </button>
-  
-  {%- if customer -%}
-    <a href="{{ routes.account_url }}" class="header__icon-btn" aria-label="{{ 'customer.account.title' | t }}">
-      {% render 'icon-user' %}
-    </a>
-  {%- endif -%}
+        <button class="header__icon-btn" data-search-open aria-label="{{ 'general.search.search' | t }}">
+          {% render 'icon-search' %}
+        </button>
 
-  <a href="{{ routes.account_url }}" class="header__icon-btn header__wishlist-btn" aria-label="Favoritos">
-    {% render 'icon-heart' %}
-  </a>
-  
-  <!-- ÍCONO DEL CARRITO -->
-  <a href="{{ routes.cart_url }}" class="header__icon-btn header__cart-btn" aria-label="{{ 'cart.general.title' | t }}">
-    {% render 'icon-cart' %}
-    <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
-  </a>
+        {%- if customer and section.settings.show_account -%}
+          <a href="{{ routes.account_url }}" class="header__icon-btn" aria-label="{{ 'customer.account.title' | t }}">
+            {% render 'icon-user' %}
+          </a>
+        {%- endif -%}
 
-  <!-- MINI‑CARRITO (CORRECTAMENTE ANIDADO) -->
-  <div id="mini-cart" class="mini-cart hidden">
-    <div class="mini-cart-header">
-      <h4>Tu carrito</h4>
-      <span class="mini-cart-close">×</span>
+        {% if section.settings.show_wishlist %}
+          <a href="{{ routes.account_url }}" class="header__icon-btn header__wishlist-btn" aria-label="Favoritos">
+            {% render 'icon-heart' %}
+          </a>
+        {% endif %}
+        
+        {% if section.settings.show_cart %}
+          <a
+            href="{{ routes.cart_url }}"
+            class="header__icon-btn header__cart-btn"
+            aria-label="{{ 'cart.general.title' | t }}"
+            data-cart-open
+          >
+            {% render 'icon-cart' %}
+            <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+          </a>
+        {% endif %}
+
+        <div
+          id="mini-cart"
+          class="mini-cart hidden"
+          data-cart-drawer
+          aria-hidden="true"
+        >
+          <div class="mini-cart-header">
+            <h4>Tu carrito</h4>
+            <button type="button" class="mini-cart-close" data-cart-close aria-label="{{ 'general.accessibility.close' | t }}">×</button>
+          </div>
+
+          <div id="mini-cart-items" class="mini-cart-items" data-cart-items></div>
+
+          <div class="mini-cart-summary">
+            <span>Subtotal:</span>
+            <strong id="mini-cart-subtotal" data-cart-subtotal>$0.00</strong>
+          </div>
+
+          <div class="mini-cart-footer">
+            <a href="/checkout" class="btn btn--primary w-full">Proceder al pago</a>
+          </div>
+        </div>
+
+        {%- if customer -%}
+          <a href="{{ routes.account_url }}" class="header__login-btn">{{ 'customer.account.title' | t }}</a>
+        {%- else -%}
+          <a href="{{ routes.account_login_url }}" class="header__login-btn">{{ section.settings.login_text | default: 'Iniciar Sesión' }}</a>
+        {%- endif -%}
+      </div>
     </div>
 
-    <div id="mini-cart-items" class="mini-cart-items"></div>
-
-    <div class="mini-cart-summary">
-      <span>Subtotal:</span>
-      <strong id="mini-cart-subtotal">$0.00</strong>
-    </div>
-
-    <div class="mini-cart-footer">
-      <a href="/checkout" class="btn btn--primary w-full">Proceder al pago</a>
-    </div>
-  </div>
-
-  {%- if customer -%}
-    <a href="{{ routes.account_url }}" class="header__login-btn">{{ 'customer.account.title' | t }}</a>
-  {%- else -%}
-    <a href="{{ routes.account_login_url }}" class="header__login-btn">{{ section.settings.login_text | default: 'Iniciar Sesión' }}</a>
-  {%- endif -%}
-</div>
-</div>
-
-    {%- comment -%} Desktop Navigation {%- endcomment -%}
     <nav class="header__nav">
-      {%- comment -%} Home Link (only on inner pages) {%- endcomment -%}
       {%- unless template.name == 'index' -%}
         <a href="{{ routes.root_url }}" class="header__home-link">
           {% render 'icon-home' %}
@@ -92,7 +109,7 @@
       {%- for link in linklists[section.settings.menu].links -%}
         {%- if link.title == 'Inicio' or link.title == 'INICIO' or link.title == 'Home' -%}
           {%- continue -%}
-          {%- endif -%}
+        {%- endif -%}
 
         {%- if link.links != blank -%}
           <div class="header__nav-item{% if link.links.first.links != blank %} header__nav-item--mega{% endif %}">
@@ -102,7 +119,6 @@
             </a>
             
             {%- if link.links.first.links != blank -%}
-              {%- comment -%} Mega Menu {%- endcomment -%}
               <div class="header__mega-menu">
                 {%- for childlink in link.links -%}
                   <div class="header__mega-column">
@@ -116,7 +132,6 @@
                 {%- endfor -%}
               </div>
             {%- else -%}
-              {%- comment -%} Simple Dropdown {%- endcomment -%}
               <div class="header__dropdown">
                 {%- for childlink in link.links -%}
                   <a href="{{ childlink.url }}" class="header__dropdown-link">
@@ -138,576 +153,13 @@
   </div>
 </header>
 
-{%- comment -%} Spacer for fixed header {%- endcomment -%}
-<div class="header-spacer"></div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  const cartBtn = document.querySelector('.header__cart-btn');
-  const miniCart = document.getElementById('mini-cart');
-  const cartCount = document.querySelector('[data-cart-count]');
-
-  if (!cartBtn || !miniCart) return;
-
-  /* ============================
-     MOSTRAR / OCULTAR MINI‑CARRITO
-  ============================ */
-  cartBtn.addEventListener('mouseenter', () => {
-    loadMiniCart();
-    miniCart.classList.remove('hidden');
-    setTimeout(() => miniCart.classList.add('show'), 10);
-  });
-
-  miniCart.addEventListener('mouseleave', () => {
-    miniCart.classList.remove('show');
-    setTimeout(() => miniCart.classList.add('hidden'), 200);
-  });
-
-
-  /* ============================
-     CARGAR MINI‑CARRITO (AJAX)
-  ============================ */
-  function loadMiniCart() {
-    fetch('/cart.js')
-      .then(res => res.json())
-      .then(cart => {
-
-        const container = document.getElementById('mini-cart-items');
-        const subtotal = document.getElementById('mini-cart-subtotal');
-
-        container.innerHTML = '';
-
-        // Actualizar contador del ícono
-        cartCount.textContent = cart.item_count;
-        cartCount.dataset.cartCount = cart.item_count;
-
-        if (cart.items.length === 0) {
-          container.innerHTML = '<p>Tu carrito está vacío.</p>';
-          subtotal.textContent = '$0.00';
-          return;
-        }
-
-        subtotal.textContent = Shopify.formatMoney(cart.total_price);
-
-        cart.items.forEach(item => {
-          container.innerHTML += `
-            <div class="mini-cart-item">
-              <img src="${item.image}" />
-              <div>
-                <div class="mini-cart-item-title">${item.product_title}</div>
-
-                <div class="mini-cart-qty">
-                  <button data-action="minus" data-key="${item.key}">-</button>
-                  <span>${item.quantity}</span>
-                  <button data-action="plus" data-key="${item.key}">+</button>
-                </div>
-
-                <div class="mini-cart-remove" data-key="${item.key}">
-                  Eliminar
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        attachQtyListeners();
-        attachRemoveListeners();
-      });
-  }
-
-
-  /* ============================
-     SUMAR / RESTAR CANTIDADES
-  ============================ */
-  function attachQtyListeners() {
-    document.querySelectorAll('.mini-cart-qty button').forEach(btn => {
-      btn.addEventListener('click', () => {
-
-        const key = btn.dataset.key;
-        const action = btn.dataset.action;
-
-        fetch('/cart.js')
-          .then(res => res.json())
-          .then(cart => {
-
-            const item = cart.items.find(i => i.key === key);
-            if (!item) return;
-
-            let newQty = item.quantity;
-
-            if (action === 'plus') newQty++;
-            if (action === 'minus') newQty--;
-
-            if (newQty < 1) newQty = 1;
-
-            fetch('/cart/change.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: key, quantity: newQty })
-            })
-            .then(() => loadMiniCart());
-          });
-      });
-    });
-  }
-
-
-  /* ============================
-     ELIMINAR PRODUCTO
-  ============================ */
-  function attachRemoveListeners() {
-    document.querySelectorAll('.mini-cart-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.dataset.key;
-
-        fetch('/cart/change.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: key, quantity: 0 })
-        })
-        .then(() => loadMiniCart());
-      });
-    });
-  }
-
-});
-</script>
-
-<style>
-  :root {
-    --header-height: 36px;
-    --announcement-height: {{ section.settings.announcement_bar_height | default: 36 }}px;
-  }
-
-  .header {
-    position: fixed;
-    top: var(--announcement-height);
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 50;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .header.is-hidden {
-    transform: translateY(calc(-100% - var(--announcement-height)));
-  }
-
-  .header__container {
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 0 0.75rem;
-  }
-
-  @media (min-width: 768px) {
-    .header__container {
-      padding: 0 3rem;
-    }
-  }
-
-  .header__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-
-  .header__logo {
-    margin-left: -400px;
-    padding-top: 95px;
-    flex-shrink: 0;
-    text-decoration: none;
-  }
-
-  .header__logo-text {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: #000;
-    margin: 0;
-  }
-
-  @media (min-width: 768px) {
-    .header__logo-text {
-      font-size: 1.5rem;
-    }
-  }
-
-  .header__mobile-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    margin-left: -8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  @media (min-width: 1024px) {
-    .header__mobile-btn {
-      display: none;
-    }
-  }
-
-  .header__icons {
-    margin-right: -400px;
-    padding-top: 95px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  @media (min-width: 768px) {
-    .header__icons {
-      gap: 16px;
-    }
-  }
-
-  .header__icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-    color: #000;
-    text-decoration: none;
-  }
-
-  .header__icon-btn:hover {
-    background-color: #F5F5F0;
-  }
-
-  .header__icon-btn svg {
-    width: 20px;
-    height: 20px;
-    stroke-width: 1.5;
-  }
-
-  .header__cart-btn {
-    position: relative;
-  }
-
-  .header__cart-count {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    background-color: #FFD700;
-    color: #000;
-    font-size: 0.75rem;
-    font-weight: 700;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .header__cart-count:empty,
-  .header__cart-count[data-cart-count="0"] {
-    display: none;
-  }
-
-  .header__login-btn {
-    display: none;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
-    padding: 8px 16px;
-    transition: color 0.3s ease;
-    text-decoration: none;
-    color: #000;
-  }
-
-  .header__login-btn:hover {
-    color: #E6A500;
-  }
-
-  @media (min-width: 768px) {
-    .header__login-btn {
-      display: block;
-    }
-  }
-
-  .header__nav {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    height: 48px;
-    gap: 4px;
-  }
-
-  @media (min-width: 1024px) {
-    .header__nav {
-      display: flex;
-    }
-  }
-
-  .header__home-link {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
-    color: #E6A500;
-    transition: color 0.3s ease;
-    text-decoration: none;
-  }
-
-  .header__home-link:hover {
-    color: #000;
-  }
-
-  .header__home-link svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .header__nav-item {
-    position: relative;
-  }
-
-  .header__nav-link {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
-    color: #4A4A4A;
-    transition: color 0.3s ease;
-    text-decoration: none;
-  }
-
-  .header__nav-link:hover {
-    color: #000;
-  }
-
-  .header__nav-link--highlight {
-    color: #E6A500;
-  }
-
-  .header__nav-link svg {
-    width: 12px;
-    height: 12px;
-    transition: transform 0.3s ease;
-  }
-
-  .header__nav-item:hover .header__nav-link svg {
-    transform: rotate(180deg);
-  }
-
-  .header__dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    min-width: 200px;
-    padding: 8px 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-  }
-
-  .header__nav-item:hover .header__dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .header__dropdown-link {
-    display: block;
-    padding: 8px 16px;
-    font-size: 0.875rem;
-    color: #4A4A4A;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
-
-  .header__dropdown-link:hover {
-    background-color: #FAF9F7;
-    color: #000;
-  }
-
-  .header__mega-menu {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background-color: #fff;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 24px;
-    min-width: 700px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .header__nav-item--mega:hover .header__mega-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .header__mega-column {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .header__mega-title {
-    font-family: var(--font-heading);
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #E6A500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
-  }
-
-  .header__mega-link {
-    font-size: 0.875rem;
-    color: #4B5563;
-    padding: 4px 0;
-    transition: color 0.3s ease;
-    text-decoration: none;
-  }
-
-  .header__mega-link:hover {
-    color: #000;
-  }
-
-  .header-spacer {
-    height: calc(var(--header-height) + var(--announcement-height));
-  }
-
-  /* MINI CART — SOLEIL PREMIUM */
-.mini-cart {
-  position: absolute;
-  top: 70px;
-  right: 0;
-  width: 340px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-  padding: 1rem;
-  z-index: 99999;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all .25s ease;
-}
-
-.mini-cart.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.mini-cart.hidden {
-  display: none;
-}
-
-.mini-cart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: .5rem;
-}
-
-.mini-cart-header h4 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.mini-cart-close {
-  cursor: pointer;
-  font-size: 1.4rem;
-  line-height: 1;
-}
-
-.mini-cart-items {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-
-.mini-cart-item {
-  display: flex;
-  gap: .8rem;
-  margin-bottom: 1rem;
-  padding-bottom: .8rem;
-  border-bottom: 1px solid #eee;
-}
-
-.mini-cart-item img {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.mini-cart-item-title {
-  font-size: .9rem;
-  font-weight: 600;
-}
-
-.mini-cart-qty {
-  display: flex;
-  align-items: center;
-  gap: .4rem;
-  margin-top: .3rem;
-}
-
-.mini-cart-qty button {
-  width: 22px;
-  height: 22px;
-  border: 1px solid #ccc;
-  background: #fafafa;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.mini-cart-remove {
-  color: #d00;
-  cursor: pointer;
-  font-size: .8rem;
-  margin-top: .3rem;
-}
-
-.mini-cart-summary {
-  display: flex;
-  justify-content: space-between;
-  font-size: .95rem;
-  margin-bottom: 1rem;
-}
-</style>
+<div class="header-spacer{% if template.name == 'index' %} header-spacer--overlay{% endif %}"></div>
 
 {% schema %}
 {
   "name": "Header",
   "tag": "section",
   "class": "header-section",
-
   "settings": [
     {
       "type": "header",
@@ -733,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
       "step": 10,
       "default": 150
     },
-
     {
       "type": "header",
       "content": "Menú"
@@ -755,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
       ],
       "default": "center"
     },
-
     {
       "type": "header",
       "content": "Estilos del Header"
@@ -796,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
       "step": 2,
       "default": 16
     },
-
     {
       "type": "header",
       "content": "Íconos"
@@ -825,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
       "label": "Mostrar icono del carrito",
       "default": true
     },
-
     {
       "type": "header",
       "content": "Comportamiento"

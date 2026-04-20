@@ -1,324 +1,161 @@
 {% comment %}
-  PRODUCT PAGE – SOLEIL BEAUTY SHOP
-  Tema personalizado desde cero
+  PDP modular Tailwind-first
 {% endcomment %}
 
-<section class="product-page shopify-section">
-  <div class="container product-page__wrapper">
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign first_media = product.featured_media | default: product.media.first -%}
 
-    <!-- ============================
-         GALERÍA DE IMÁGENES
-    ============================= -->
-    <div class="product-page__gallery">
+<section
+  class="shopify-section"
+  data-product-section
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+>
+  <div class="container py-12 lg:py-16">
+    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div class="flex gap-4" data-product-gallery>
+        <div class="hidden w-20 shrink-0 md:flex md:flex-col md:gap-3">
+          {% for media in product.media %}
+            {% if media.media_type == 'image' %}
+              <button
+                type="button"
+                class="overflow-hidden rounded-md border border-gray-200 transition hover:border-black focus:outline-none focus:ring-2 focus:ring-black {% if forloop.first %}ring-2 ring-black{% endif %}"
+                data-product-thumb
+                data-media-url="{{ media | image_url: width: 1400 }}"
+                aria-label="{{ product.title | escape }} - imagen {{ forloop.index }}"
+              >
+                <img
+                  src="{{ media | image_url: width: 160 }}"
+                  alt="{{ product.title | escape }} - miniatura {{ forloop.index }}"
+                  class="h-20 w-full object-cover"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
 
-      <!-- Miniaturas -->
-      <div class="product-thumbs">
-        {% for media in product.media %}
-          <img 
-            src="{{ media | image_url: width: 200 }}"
-            class="thumb-img"
-            data-full="{{ media | image_url: width: 1200 }}"
-          >
-        {% endfor %}
+        <div class="w-full overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+          {% if first_media %}
+            <img
+              data-product-main-image
+              src="{{ first_media | image_url: width: 1400 }}"
+              alt="{{ product.title | escape }}"
+              class="h-full w-full object-cover"
+              loading="eager"
+              width="900"
+              height="900"
+            >
+          {% else %}
+            <div class="flex min-h-[420px] items-center justify-center text-sm text-gray-500">
+              {{ 'products.product.no_media' | t | default: 'Sin imagen disponible' }}
+            </div>
+          {% endif %}
+        </div>
       </div>
 
-      <!-- Imagen principal -->
-      <div class="product-main-image">
-        {% assign first_image = product.media.first %}
-        <img 
-          id="main-product-image"
-          src="{{ first_image | image_url: width: 1200 }}"
-        >
-      </div>
+      <div class="space-y-8">
+        <div class="space-y-3">
+          <h1 class="font-heading text-3xl font-semibold tracking-tight md:text-4xl">{{ product.title }}</h1>
+          <p class="text-2xl font-semibold text-black" data-product-price>
+            {{ current_variant.price | money }}
+          </p>
+        </div>
 
+        <div>
+          {% form 'product', product, class: 'space-y-5', data-product-form: '' %}
+            {% if product.variants.size > 1 %}
+              <div class="space-y-2">
+                <label for="variant-select-{{ section.id }}" class="block text-sm font-medium text-gray-800">
+                  Selecciona una opción
+                </label>
+                <select
+                  id="variant-select-{{ section.id }}"
+                  name="id"
+                  class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                  data-product-variant-select
+                >
+                  {% for variant in product.variants %}
+                    <option
+                      value="{{ variant.id }}"
+                      data-image="{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 1400 }}{% elsif first_media %}{{ first_media | image_url: width: 1400 }}{% endif %}"
+                      data-price="{{ variant.price | money }}"
+                      {% if variant == current_variant %}selected{% endif %}
+                    >
+                      {{ variant.title }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% else %}
+              <input type="hidden" name="id" value="{{ current_variant.id }}">
+            {% endif %}
+
+            <div class="space-y-2">
+              <label for="quantity-{{ section.id }}" class="block text-sm font-medium text-gray-800">
+                Cantidad
+              </label>
+              <input
+                id="quantity-{{ section.id }}"
+                type="number"
+                name="quantity"
+                min="1"
+                value="1"
+                class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                data-product-quantity
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="inline-flex w-full items-center justify-center rounded-md bg-black px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-gold hover:text-black"
+              data-product-submit
+            >
+              Agregar al carrito
+            </button>
+
+            {{ form | payment_button }}
+          {% endform %}
+        </div>
+
+        <div class="space-y-4" data-product-tabs>
+          <div class="flex flex-wrap gap-3 border-b border-gray-200 pb-2">
+            <button type="button" class="rounded-full border border-black bg-black px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white" data-tab-trigger="details" aria-selected="true">Detalles</button>
+            <button type="button" class="rounded-full border border-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700" data-tab-trigger="reviews" aria-selected="false">Reseñas</button>
+            <button type="button" class="rounded-full border border-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700" data-tab-trigger="store" aria-selected="false">Tienda</button>
+            <button type="button" class="rounded-full border border-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700" data-tab-trigger="related" aria-selected="false">Te podría interesar</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- ============================
-         INFORMACIÓN DEL PRODUCTO
-    ============================= -->
-    <div class="product-page__info">
-
-      <!-- Título -->
-      <h1 class="product-title">
-        {{ product.title }}
-      </h1>
-
-      <!-- Precio -->
-      <div class="product-price">
-        {{ product.selected_or_first_available_variant.price | money }}
-      </div>
-
-      <!-- ============================
-           FORMULARIO DE COMPRA
-      ============================= -->
-      <div class="product-form">
-        {% form 'product', product %}
-
-          {% assign current_variant = product.selected_or_first_available_variant %}
-
-          <!-- Selector de variantes -->
-          {% if product.variants.size > 1 %}
-            <label class="product-option-label">Selecciona una opción</label>
-            <select name="id" id="variant-select" class="product-select">
-              {% for variant in product.variants %}
-                <option 
-                  value="{{ variant.id }}"
-                  data-image="{{ variant.featured_image | image_url: width: 1200 }}"
-                  {% if variant == current_variant %}selected{% endif %}
-                >
-                  {{ variant.title }}
-                </option>
-              {% endfor %}
-            </select>
-          {% else %}
-            <input type="hidden" name="id" value="{{ current_variant.id }}">
-          {% endif %}
-
-          <!-- Cantidad -->
-          <div class="product-qty">
-            <label for="quantity">Cantidad</label>
-            <input
-              id="quantity"
-              type="number"
-              name="quantity"
-              min="1"
-              value="1"
-              class="product-qty-input"
-            >
-          </div>
-
-          <!-- Botón de compra -->
-          <button type="submit" class="btn btn--primary product-add-btn">
-            Agregar al carrito
-          </button>
-
-          {{ form | payment_button }}
-
-        {% endform %}
-      </div>
-
-      <!-- ============================
-           TABS
-      ============================= -->
-      <div class="product-tabs">
-        <button class="tab-btn active" data-tab="tab-details">Detalles</button>
-        <button class="tab-btn" data-tab="tab-reviews">Reseñas</button>
-        <button class="tab-btn" data-tab="tab-store">Tienda</button>
-        <button class="tab-btn" data-tab="tab-related">Te podría interesar</button>
-      </div>
-
-      <div class="tab-content active" id="tab-details">
+    <div class="mt-12 space-y-10 lg:mt-16">
+      <section id="details" data-product-anchor-section="details" class="product-anchor-section rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 class="mb-4 font-heading text-2xl font-semibold">Detalles</h2>
         {% render 'product-details-table', product: product %}
-      </div>
+      </section>
 
-      <div class="tab-content" id="tab-reviews">
+      <section id="reviews" data-product-anchor-section="reviews" class="product-anchor-section rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 class="mb-4 font-heading text-2xl font-semibold">Reseñas</h2>
         {% render 'product-reviews', product: product %}
-      </div>
+      </section>
 
-      <div class="tab-content" id="tab-store">
-        <p>Envíos desde Campeche, México.<br>Atención personalizada.</p>
-      </div>
+      <section id="store" data-product-anchor-section="store" class="product-anchor-section rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 class="mb-4 font-heading text-2xl font-semibold">Tienda</h2>
+        <p class="text-sm leading-relaxed text-gray-700">
+          Envíos desde Campeche, México.<br>Atención personalizada.
+        </p>
+      </section>
 
-      <div class="tab-content" id="tab-related">
+      <section id="related" data-product-anchor-section="related" class="product-anchor-section rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 class="mb-4 font-heading text-2xl font-semibold">Te podría interesar</h2>
         {% render 'product-related', product: product %}
-      </div>
-
+      </section>
     </div>
   </div>
-
-  <!-- ============================
-       JAVASCRIPT
-  ============================= -->
-  <script>
-  /* Miniaturas → cambiar imagen principal */
-  document.querySelectorAll('.thumb-img').forEach(img => {
-    img.addEventListener('click', () => {
-      document.getElementById('main-product-image').src = img.dataset.full;
-    });
-  });
-
-  /* Variantes → cambiar imagen principal */
-  const variantSelect = document.getElementById('variant-select');
-  if (variantSelect) {
-    variantSelect.addEventListener('change', () => {
-      const selected = variantSelect.options[variantSelect.selectedIndex];
-      const img = selected.dataset.image;
-      if (img) {
-        document.getElementById('main-product-image').src = img;
-      }
-    });
-  }
-
-  /* Tabs */
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-    });
-  });
-  </script>
-
-  <script>
-document.querySelector('.product-form form').addEventListener('submit', function(e) {
-  e.preventDefault(); // Evita redirección
-
-  const formData = new FormData(this);
-
-  fetch('/cart/add.js', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Producto agregado:', data);
-
-    // Aquí puedes mostrar un mensaje, popup o animación
-    alert('Producto agregado al carrito');
-  })
-  .catch(error => {
-    console.error('Error al agregar al carrito:', error);
-  });
-});
-</script>
-
 </section>
-
-<style>
-/* ============================================
-   PRODUCT PAGE – ESTILOS SOLEIL
-============================================ */
-
-/* Layout general */
-.product-page__wrapper {
-  display: grid;
-  gap: 3rem;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-}
-
-@media (min-width: 1024px) {
-  .product-page__wrapper {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-  }
-}
-
-/* Galería */
-.product-page__gallery {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.product-thumbs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  width: 90px;
-}
-
-.thumb-img {
-  width: 100%;
-  border-radius: 6px;
-  cursor: pointer;
-  border: 1px solid #eee;
-  transition: 0.2s;
-}
-
-.thumb-img:hover {
-  border-color: black;
-}
-
-.product-main-image img {
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: var(--shadow-md);
-}
-
-/* Info */
-.product-title {
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.product-price {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-}
-
-/* Formulario */
-.product-select,
-.product-qty-input {
-  width: 100%;
-  padding: 1rem;
-  border: 1px solid rgba(0,0,0,0.2);
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-}
-
-.product-option-label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-.product-qty {
-  margin-bottom: 1.5rem;
-}
-
-.product-add-btn {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-/* Tabs */
-.product-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 3rem;
-  border-bottom: 1px solid #eee;
-}
-
-.tab-btn {
-  padding: 0.8rem 1.2rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: #666;
-}
-
-.tab-btn.active {
-  color: black;
-  border-bottom: 2px solid black;
-}
-
-.tab-content {
-  display: none;
-  padding-top: 2rem;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* Tabla de detalles */
-.details-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.details-table td {
-  padding: 0.8rem 0;
-  border-bottom: 1px solid #eee;
-}
-</style>
 
 {% schema %}
 {
