@@ -1,0 +1,172 @@
+[
+  {
+    "name": "Colores del tema",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Color de fondo",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Color de texto",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Color primario (Soleil)",
+        "default": "#F5E6D3"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Color secundario",
+        "default": "#E8D4C0"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color acento",
+        "default": "#D4A373"
+      }
+    ]
+  },
+
+  {
+  "name": "Tipografías",
+  "settings": [
+    {
+      "type": "font_picker",
+      "id": "font_heading",
+      "label": "Tipografía de encabezados",
+      "default": "montserrat_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_body",
+      "label": "Tipografía del cuerpo",
+      "default": "manrope_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_serif",
+      "label": "Tipografía serif",
+      "default": "playfair_display_n4"
+    }
+  ]
+},
+
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "header_sticky",
+        "label": "Header fijo al hacer scroll",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "header_bg",
+        "label": "Color de fondo del header",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "header_text",
+        "label": "Color del texto del header",
+        "default": "#000000"
+      }
+    ]
+  },
+
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "color",
+        "id": "footer_bg",
+        "label": "Color de fondo del footer",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "footer_text",
+        "label": "Color del texto del footer",
+        "default": "#ffffff"
+      }
+    ]
+  },
+
+  {
+    "name": "Botones",
+    "settings": [
+      {
+        "type": "color",
+        "id": "button_bg",
+        "label": "Color de fondo del botón",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "button_text",
+        "label": "Color del texto del botón",
+        "default": "#ffffff"
+      },
+      {
+        "type": "range",
+        "id": "button_radius",
+        "label": "Radio de borde",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 4
+      }
+    ]
+  },
+
+  {
+    "name": "Imágenes",
+    "settings": [
+      {
+        "type": "range",
+        "id": "image_overlay_opacity",
+        "label": "Opacidad del overlay",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 40
+      },
+      {
+        "type": "color",
+        "id": "image_overlay_color",
+        "label": "Color del overlay",
+        "default": "#000000"
+      }
+    ]
+  },
+
+  {
+    "name": "Social",
+    "settings": [
+      {
+        "type": "url",
+        "id": "instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "tiktok",
+        "label": "TikTok"
+      }
+    ]
+  }
+]

@@ -1,0 +1,94 @@
+{
+  "current": {
+    "color_gold": "#D4A853",
+    "color_gold_dark": "#B8860B",
+    "color_cream": "#FDF8F0",
+    "color_body_text": "#1a1a1a",
+    "color_body_bg": "#ffffff",
+
+    "font_heading": "montserrat_n4",
+    "font_body": "manrope_n4",
+    "font_serif": "playfair_display_n4",
+    "font_ui": "montserrat_n4",
+
+    "social_instagram": "https://instagram.com/soleilbeauty",
+    "social_facebook": "https://facebook.com/soleilbeauty",
+    "social_twitter": "",
+
+    "sections": {
+      "header-group": {
+        "type": "header",
+        "sections": {
+          "announcement": {
+            "type": "announcement-bar",
+            "settings": {
+              "show_announcement": true,
+              "text": "Free shipping on orders over $75 ✨",
+              "bg_color": "#1a1a1a",
+              "text_color": "#ffffff",
+              "show_close": true,
+              "icon": "none"
+            }
+          },
+          "header": {
+            "type": "header",
+            "settings": {
+              "logo_text": "SOLEIL",
+              "logo_width": 120,
+              "menu": "main-menu"
+            }
+          }
+        },
+        "order": ["announcement", "header"]
+      },
+
+      "footer-group": {
+        "type": "footer",
+        "sections": {
+          "newsletter": {
+            "type": "newsletter",
+            "settings": {
+              "heading": "Join the Soleil Family",
+              "text": "Subscribe to receive exclusive offers, early access to new arrivals, and beauty tips.",
+              "placeholder": "Enter your email",
+              "button_text": "Subscribe"
+            }
+          },
+          "footer": {
+            "type": "footer",
+            "settings": {
+              "brand_name": "SOLEIL",
+              "brand_description": "Luxury beauty essentials for the modern woman. Radiate confidence, embrace your glow.",
+              "copyright_text": "All rights reserved."
+            },
+            "blocks": {
+              "shop_links": {
+                "type": "link_column",
+                "settings": {
+                  "title": "Shop",
+                  "menu": "footer-shop"
+                }
+              },
+              "help_links": {
+                "type": "link_column",
+                "settings": {
+                  "title": "Help",
+                  "menu": "footer-help"
+                }
+              },
+              "about_links": {
+                "type": "link_column",
+                "settings": {
+                  "title": "About",
+                  "menu": "footer-about"
+                }
+              }
+            },
+            "block_order": ["shop_links", "help_links", "about_links"]
+          }
+        },
+        "order": ["newsletter", "footer"]
+      }
+    }
+  }
+}
