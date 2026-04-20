@@ -1,29 +1,33 @@
-<table class="details-table">
-  {% if product.metafields.details.fragrance_note %}
-  <tr>
-    <td>Nota de fragancia</td>
-    <td>{{ product.metafields.details.fragrance_note }}</td>
-  </tr>
-  {% endif %}
+<div class="overflow-hidden rounded-lg border border-gray-200">
+  <table class="min-w-full divide-y divide-gray-200 text-sm">
+    <tbody class="divide-y divide-gray-100 bg-white">
+      {% if product.metafields.details.fragrance_note %}
+        <tr>
+          <th scope="row" class="w-1/3 bg-gray-50 px-4 py-3 text-left font-medium text-gray-700">Nota de fragancia</th>
+          <td class="px-4 py-3 text-gray-800">{{ product.metafields.details.fragrance_note }}</td>
+        </tr>
+      {% endif %}
 
-  {% if product.metafields.details.gender %}
-  <tr>
-    <td>Género</td>
-    <td>{{ product.metafields.details.gender }}</td>
-  </tr>
-  {% endif %}
+      {% if product.metafields.details.gender %}
+        <tr>
+          <th scope="row" class="w-1/3 bg-gray-50 px-4 py-3 text-left font-medium text-gray-700">Género</th>
+          <td class="px-4 py-3 text-gray-800">{{ product.metafields.details.gender }}</td>
+        </tr>
+      {% endif %}
 
-  {% if product.metafields.details.concentration %}
-  <tr>
-    <td>Concentración</td>
-    <td>{{ product.metafields.details.concentration }}</td>
-  </tr>
-  {% endif %}
+      {% if product.metafields.details.concentration %}
+        <tr>
+          <th scope="row" class="w-1/3 bg-gray-50 px-4 py-3 text-left font-medium text-gray-700">Concentración</th>
+          <td class="px-4 py-3 text-gray-800">{{ product.metafields.details.concentration }}</td>
+        </tr>
+      {% endif %}
 
-  {% if product.metafields.details.alcohol %}
-  <tr>
-    <td>Alcohol</td>
-    <td>{{ product.metafields.details.alcohol }}</td>
-  </tr>
-  {% endif %}
-</table>
+      {% if product.metafields.details.alcohol %}
+        <tr>
+          <th scope="row" class="w-1/3 bg-gray-50 px-4 py-3 text-left font-medium text-gray-700">Alcohol</th>
+          <td class="px-4 py-3 text-gray-800">{{ product.metafields.details.alcohol }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>

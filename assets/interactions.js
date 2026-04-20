@@ -1,251 +1,157 @@
-/**
- * Soleil Beauty Shop - Interactions
- * 
- * UI interactions: dropdowns, modals, tabs, etc.
- */
+const InteractionsModule = (() => {
+  let initialized = false;
 
-(function() {
-  'use strict';
+  function initMobileMenu() {
+    const menu = document.querySelector("[data-mobile-menu]");
+    const overlay = document.querySelector("[data-mobile-menu-overlay]");
+    if (!menu || !overlay) return;
 
-  document.addEventListener('DOMContentLoaded', function() {
-    initDropdowns();
-    initWishlist();
-    initQuantitySelectors();
-    initImageZoom();
-    initTabs();
-  });
+    const openButtons = document.querySelectorAll("[data-mobile-menu-open]");
+    const closeButtons = document.querySelectorAll("[data-mobile-menu-close]");
 
-  /**
-   * Dropdown menus (for navigation)
-   */
-  function initDropdowns() {
-    const dropdownItems = document.querySelectorAll('.header__nav-item');
-    
-    dropdownItems.forEach(function(item) {
-      const link = item.querySelector('.header__nav-link');
-      const dropdown = item.querySelector('.header__dropdown, .header__mega-menu');
-      
-      if (!dropdown) return;
-      
-      // Show on hover (desktop)
-      item.addEventListener('mouseenter', function() {
-        dropdown.classList.add('is-visible');
-      });
-      
-      item.addEventListener('mouseleave', function() {
-        dropdown.classList.remove('is-visible');
-      });
-      
-      // Keyboard navigation
-      if (link) {
-        link.addEventListener('focus', function() {
-          dropdown.classList.add('is-visible');
-        });
-      }
-      
-      item.addEventListener('focusout', function(e) {
-        if (!item.contains(e.relatedTarget)) {
-          dropdown.classList.remove('is-visible');
+    const open = () => {
+      menu.classList.add("is-open");
+      overlay.classList.add("is-open");
+      menu.setAttribute("aria-hidden", "false");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    const close = () => {
+      menu.classList.remove("is-open");
+      overlay.classList.remove("is-open");
+      menu.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    openButtons.forEach((btn) => btn.addEventListener("click", open));
+    closeButtons.forEach((btn) => btn.addEventListener("click", close));
+    overlay.addEventListener("click", close);
+
+    menu.addEventListener("click", (event) => {
+      const toggle = event.target.closest("[data-mobile-submenu-toggle]");
+      if (!toggle) return;
+      const item = toggle.closest(".mobile-menu__item--has-children");
+      if (!item) return;
+      item.classList.toggle("is-open");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+  }
+
+  function initSearchOverlay() {
+    const overlay = document.querySelector("[data-search-overlay]");
+    if (!overlay) return;
+
+    const openButtons = document.querySelectorAll("[data-search-open]");
+    const closeButtons = document.querySelectorAll("[data-search-close]");
+    const input = overlay.querySelector("[data-search-input]");
+
+    const open = () => {
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("overflow-hidden");
+      if (input) setTimeout(() => input.focus(), 50);
+    };
+
+    const close = () => {
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    openButtons.forEach((btn) => btn.addEventListener("click", open));
+    closeButtons.forEach((btn) => btn.addEventListener("click", close));
+
+    overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) close();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+  }
+
+  function initHeaderDropdowns() {
+    const items = document.querySelectorAll(".header__nav-item");
+    items.forEach((item) => {
+      item.classList.remove("is-open");
+
+      const trigger = item.querySelector(".header__nav-link");
+      const panel = item.querySelector(".header__dropdown, .header__mega-menu");
+      if (!trigger || !panel) return;
+
+      item.addEventListener("mouseenter", () => item.classList.add("is-open"));
+      item.addEventListener("mouseleave", () => item.classList.remove("is-open"));
+
+      trigger.addEventListener("focus", () => item.classList.add("is-open"));
+      item.addEventListener("focusout", (event) => {
+        if (!item.contains(event.relatedTarget)) {
+          item.classList.remove("is-open");
         }
       });
     });
   }
 
-  /**
-   * Wishlist functionality
-   */
-  function initWishlist() {
-    const wishlistButtons = document.querySelectorAll('[data-wishlist-add]');
-    
-    // Get current wishlist from localStorage
-    let wishlist = JSON.parse(localStorage.getItem('soleil_wishlist') || '[]');
-    
-    // Update button states
-    function updateWishlistButtons() {
-      wishlistButtons.forEach(function(btn) {
-        const productId = btn.getAttribute('data-wishlist-add');
-        if (wishlist.includes(productId)) {
-          btn.classList.add('is-active');
-        } else {
-          btn.classList.remove('is-active');
-        }
-      });
-    }
-    
-    updateWishlistButtons();
-    
-    // Handle clicks
-    wishlistButtons.forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const productId = this.getAttribute('data-wishlist-add');
-        const index = wishlist.indexOf(productId);
-        
-        if (index > -1) {
-          // Remove from wishlist
-          wishlist.splice(index, 1);
-          this.classList.remove('is-active');
-        } else {
-          // Add to wishlist
-          wishlist.push(productId);
-          this.classList.add('is-active');
-        }
-        
-        // Save to localStorage
-        localStorage.setItem('soleil_wishlist', JSON.stringify(wishlist));
-        
-        // Dispatch event
-        document.dispatchEvent(new CustomEvent('wishlist:updated', {
-          detail: { wishlist: wishlist }
-        }));
-      });
-    });
-  }
+  function initHomeTransparentHeader() {
+    const header = document.getElementById("site-header");
+    if (!header) return;
 
-  /**
-   * Quantity selectors
-   */
-  function initQuantitySelectors() {
-    document.addEventListener('click', function(e) {
-      const decreaseBtn = e.target.closest('[data-quantity-decrease]');
-      const increaseBtn = e.target.closest('[data-quantity-increase]');
-      
-      if (decreaseBtn || increaseBtn) {
-        const container = (decreaseBtn || increaseBtn).closest('[data-quantity-selector]');
-        const input = container.querySelector('[data-quantity-input]');
-        const min = parseInt(input.getAttribute('min')) || 1;
-        const max = parseInt(input.getAttribute('max')) || 99;
-        let value = parseInt(input.value) || 1;
-        
-        if (decreaseBtn && value > min) {
-          value--;
-        } else if (increaseBtn && value < max) {
-          value++;
-        }
-        
-        input.value = value;
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
-  }
+    const isHomeTransparent = header.getAttribute("data-home-transparent") === "true";
+    if (!isHomeTransparent) return;
 
-  /**
-   * Image zoom on hover (product pages)
-   */
-  function initImageZoom() {
-    const zoomContainers = document.querySelectorAll('[data-image-zoom]');
-    
-    zoomContainers.forEach(function(container) {
-      const image = container.querySelector('img');
-      if (!image) return;
-      
-      container.addEventListener('mousemove', function(e) {
-        const rect = container.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        
-        image.style.transformOrigin = x + '% ' + y + '%';
-        image.style.transform = 'scale(1.5)';
-      });
-      
-      container.addEventListener('mouseleave', function() {
-        image.style.transform = 'scale(1)';
-      });
-    });
-  }
+    let lastScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    let ticking = false;
+    const downThreshold = 18;
+    const upThreshold = 10;
+    const revealAtTop = 12;
 
-  /**
-   * Tabs
-   */
-  function initTabs() {
-    const tabContainers = document.querySelectorAll('[data-tabs]');
-    
-    tabContainers.forEach(function(container) {
-      const tabs = container.querySelectorAll('[data-tab]');
-      const panels = container.querySelectorAll('[data-tab-panel]');
-      
-      tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-          const targetId = this.getAttribute('data-tab');
-          
-          // Update tabs
-          tabs.forEach(function(t) {
-            t.classList.remove('is-active');
-            t.setAttribute('aria-selected', 'false');
-          });
-          this.classList.add('is-active');
-          this.setAttribute('aria-selected', 'true');
-          
-          // Update panels
-          panels.forEach(function(panel) {
-            if (panel.getAttribute('data-tab-panel') === targetId) {
-              panel.classList.add('is-active');
-              panel.removeAttribute('hidden');
-            } else {
-              panel.classList.remove('is-active');
-              panel.setAttribute('hidden', '');
-            }
-          });
-        });
-      });
-    });
-  }
+    const updateHeaderState = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      const delta = scrollTop - lastScrollTop;
 
-  /**
-   * Form validation helpers
-   */
-  window.validateEmail = function(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  /**
-   * Format money
-   */
-  window.formatMoney = function(cents, format) {
-    if (typeof cents === 'string') {
-      cents = cents.replace('.', '');
-    }
-    
-    var value = '';
-    var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-    var formatString = format || window.theme.moneyFormat;
-
-    function formatWithDelimiters(number, precision, thousands, decimal) {
-      precision = precision || 2;
-      thousands = thousands || ',';
-      decimal = decimal || '.';
-
-      if (isNaN(number) || number == null) {
-        return 0;
+      if (scrollTop > 30) {
+        header.classList.add("is-scrolled");
+      } else {
+        header.classList.remove("is-scrolled");
       }
 
-      number = (number / 100.0).toFixed(precision);
-      var parts = number.split('.');
-      var dollarsAmount = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
-      var centsAmount = parts[1] ? (decimal + parts[1]) : '';
+      if (scrollTop <= revealAtTop) {
+        header.classList.remove("header--hidden");
+      } else if (delta > downThreshold) {
+        header.classList.add("header--hidden");
+      } else if (delta < -upThreshold) {
+        header.classList.remove("header--hidden");
+      }
 
-      return dollarsAmount + centsAmount;
-    }
+      lastScrollTop = scrollTop;
+      ticking = false;
+    };
 
-    switch (formatString.match(placeholderRegex)[1]) {
-      case 'amount':
-        value = formatWithDelimiters(cents, 2);
-        break;
-      case 'amount_no_decimals':
-        value = formatWithDelimiters(cents, 0);
-        break;
-      case 'amount_with_comma_separator':
-        value = formatWithDelimiters(cents, 2, '.', ',');
-        break;
-      case 'amount_no_decimals_with_comma_separator':
-        value = formatWithDelimiters(cents, 0, '.', ',');
-        break;
-    }
+    updateHeaderState();
 
-    return formatString.replace(placeholderRegex, value);
-  };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateHeaderState);
+      },
+      { passive: true }
+    );
+  }
 
+  function init() {
+    if (initialized) return;
+    initMobileMenu();
+    initSearchOverlay();
+    initHeaderDropdowns();
+    initHomeTransparentHeader();
+    initialized = true;
+  }
+
+  return { init };
 })();
+
+export default InteractionsModule;

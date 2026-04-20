@@ -1,79 +1,43 @@
 {%- if section.settings.show_announcement_bar -%}
-<div 
+<div
   class="announcement-bar"
   data-section-id="{{ section.id }}"
   data-section-type="announcement-bar"
+  data-announcement-direction="{{ section.settings.marquee_direction }}"
   style="
     --announcement-bg: {{ section.settings.background_color }};
     --announcement-text: {{ section.settings.text_color }};
     --announcement-separator: {{ section.settings.separator_color }};
     --announcement-height: {{ section.settings.bar_height }}px;
     --announcement-speed: {{ section.settings.animation_speed }}s;
+    --announcement-font-size: {{ section.settings.font_size }}px;
+    --announcement-font-family: {{ section.settings.font_family }};
   "
 >
-  <div class="announcement-bar__track">
-    {%- for i in (1..4) -%}
-      {%- for block in section.blocks -%}
-        <span class="announcement-bar__item" {{ block.shopify_attributes }}>
-          <span class="announcement-bar__text">{{ block.settings.text }}</span>
-          <span class="announcement-bar__separator">{{ section.settings.separator_char }}</span>
-        </span>
+  <div class="announcement-bar__marquee" aria-label="Announcement messages">
+    <div class="announcement-bar__track">
+      {%- for i in (1..2) -%}
+        {%- for block in section.blocks -%}
+          <span class="announcement-bar__item" {{ block.shopify_attributes }}>
+            <span class="announcement-bar__text">{{ block.settings.text }}</span>
+            <span class="announcement-bar__separator">{{ section.settings.separator_char }}</span>
+          </span>
+        {%- endfor -%}
       {%- endfor -%}
-    {%- endfor -%}
+    </div>
+
+    <div class="announcement-bar__track" aria-hidden="true">
+      {%- for i in (1..2) -%}
+        {%- for block in section.blocks -%}
+          <span class="announcement-bar__item">
+            <span class="announcement-bar__text">{{ block.settings.text }}</span>
+            <span class="announcement-bar__separator">{{ section.settings.separator_char }}</span>
+          </span>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
   </div>
 </div>
-
-<style>
-  .announcement-bar {
-    background-color: var(--announcement-bg);
-    height: var(--announcement-height);
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 60;
-  }
-
-  .announcement-bar__track {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    animation: marquee var(--announcement-speed) linear infinite;
-    will-change: transform;
-  }
-
-  .announcement-bar__item {
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .announcement-bar__text {
-    color: var(--announcement-text);
-    font-family: var(--font-heading);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .announcement-bar__separator {
-    color: var(--announcement-separator);
-    margin: 0 24px;
-    font-size: 10px;
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-25%);
-    }
-  }
-</style>
 {%- endif -%}
 
 {% schema %}
@@ -113,11 +77,32 @@
       "default": "✦"
     },
     {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font family",
+      "options": [
+        { "value": "var(--font-heading)", "label": "Heading font" },
+        { "value": "var(--font-body)", "label": "Body font" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "'Helvetica Neue', sans-serif", "label": "Helvetica Neue" }
+      ],
+      "default": "var(--font-heading)"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 11
+    },
+    {
       "type": "range",
       "id": "bar_height",
       "label": "Bar height (px)",
       "min": 28,
-      "max": 50,
+      "max": 56,
       "step": 2,
       "default": 36
     },
@@ -125,24 +110,34 @@
       "type": "range",
       "id": "animation_speed",
       "label": "Animation speed (seconds)",
-      "min": 15,
-      "max": 60,
-      "step": 5,
+      "min": 12,
+      "max": 90,
+      "step": 2,
       "default": 30,
       "info": "Lower = faster"
+    },
+    {
+      "type": "select",
+      "id": "marquee_direction",
+      "label": "Marquee direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
     }
   ],
   "blocks": [
     {
       "type": "message",
       "name": "Message",
-      "limit": 10,
+      "limit": 12,
       "settings": [
         {
           "type": "text",
           "id": "text",
           "label": "Text",
-          "default": "ENVÍO GRATIS EN COMPRAS DESDE $1,499"
+          "default": "Bienvenida a Soleil Beauty Shop, disfruta de nuestras mejores ofertas, envíos gratis a partir de 500 pesos, promociones cada mes"
         }
       ]
     }
@@ -155,19 +150,19 @@
         {
           "type": "message",
           "settings": {
-            "text": "ᴇɴᴠÍᴏ ɢʀᴀᴛɪꜱ ᴇɴ ᴄᴏᴍᴘʀᴀꜱ ᴅᴇꜱᴅᴇ $1,499"
+            "text": "Bienvenida a Soleil Beauty Shop, disfruta de nuestras mejores ofertas"
           }
         },
         {
           "type": "message",
           "settings": {
-            "text": "ᴘᴀɢᴀ ᴄᴏɴ ᴘᴀʏᴘᴀʟ ʜᴀꜱᴛᴀ 6 ᴍꜱɪ"
+            "text": "Envíos gratis a partir de 500 pesos"
           }
         },
         {
           "type": "message",
           "settings": {
-            "text": "ᴘᴀɢᴀ ᴇɴ Qᴜɪɴᴄᴇɴᴀꜱ ᴄᴏɴ ᴋᴜᴇꜱᴋɪᴘᴀʏ ʏ ᴀᴘʟᴀᴢᴏ"
+            "text": "Promociones cada mes"
           }
         }
       ]

@@ -1,12 +1,38 @@
-<div class="related-products">
-  {% assign related = product.collections.first.products | where: "id", product.id, false %}
-  <div class="related-grid">
-    {% for item in related limit: 4 %}
-      <a href="{{ item.url }}" class="related-item">
-        <img src="{{ item.featured_image | image_url: width: 400 }}">
-        <p>{{ item.title }}</p>
-        <span>{{ item.price | money }}</span>
-      </a>
-    {% endfor %}
-  </div>
-</div>
+{%- assign source_collection = product.collections.first -%}
+
+<section class="space-y-4" aria-label="Productos relacionados">
+  <h3 class="text-base font-semibold text-black">Te podría interesar</h3>
+
+  {% if source_collection and source_collection.products_count > 1 %}
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+      {% assign shown = 0 %}
+      {% for item in source_collection.products %}
+        {% if item.id != product.id and shown < 4 %}
+          <a href="{{ item.url }}" class="group space-y-2">
+            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+              {% if item.featured_image %}
+                <img
+                  src="{{ item.featured_image | image_url: width: 500 }}"
+                  alt="{{ item.title | escape }}"
+                  class="h-40 w-full object-cover transition duration-300 group-hover:scale-105"
+                  loading="lazy"
+                  width="250"
+                  height="250"
+                >
+              {% else %}
+                <div class="flex h-40 items-center justify-center bg-gray-100 text-xs text-gray-500">
+                  Sin imagen
+                </div>
+              {% endif %}
+            </div>
+            <p class="text-sm font-medium text-gray-900">{{ item.title }}</p>
+            <span class="text-sm text-gray-700">{{ item.price | money }}</span>
+          </a>
+          {% assign shown = shown | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-sm text-gray-600">No hay productos relacionados disponibles por ahora.</p>
+  {% endif %}
+</section>
