@@ -1,0 +1,224 @@
+<section 
+  class="featured-products"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="featured-products__container">
+
+    <div class="featured-products__header">
+      <div>
+        <h2>{{ section.settings.heading }}</h2>
+
+        {% if section.settings.show_subheading %}
+          <p>{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_view_all and section.settings.view_all_text != blank %}
+        <a href="{{ section.settings.collection.url | default: routes.all_products_collection_url }}">
+          {{ section.settings.view_all_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="products-grid products-grid--{{ section.settings.columns }}">
+      {%- assign collection = section.settings.collection -%}
+
+      {% if collection != blank %}
+        {% for product in collection.products limit: section.settings.products_to_show %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.products_to_show) %}
+          {% render 'product-card-placeholder' %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .featured-products {
+    padding: 6rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .featured-products {
+      padding: 8rem 0;
+    }
+  }
+
+  .featured-products__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .featured-products__container {
+      padding: 0 3rem;
+    }
+  }
+
+  .featured-products__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .featured-products__header {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  .featured-products__title {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .featured-products__title {
+      font-size: 3rem;
+    }
+  }
+
+  .featured-products__subtitle {
+    color: #4B5563;
+    margin: 0;
+  }
+
+  .featured-products__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .featured-products__view-all:hover {
+    color: #E6A500;
+  }
+
+  .featured-products__view-all svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .featured-products__view-all:hover svg {
+    transform: translateX(4px);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "tag": "section",
+  "class": "featured-products-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Los Más Vendidos"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Nuestros productos más queridos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "Mostrar subheading",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columnas",
+      "options": [
+        { "value": "2", "label": "2 columnas" },
+        { "value": "3", "label": "3 columnas" },
+        { "value": "4", "label": "4 columnas" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text",
+      "default": "Ver Todo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Mostrar botón Ver Todo",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products"
+    }
+  ]
+}
+
+{% endschema %}

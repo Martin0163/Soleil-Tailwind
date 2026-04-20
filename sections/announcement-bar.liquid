@@ -1,0 +1,177 @@
+{%- if section.settings.show_announcement_bar -%}
+<div 
+  class="announcement-bar"
+  data-section-id="{{ section.id }}"
+  data-section-type="announcement-bar"
+  style="
+    --announcement-bg: {{ section.settings.background_color }};
+    --announcement-text: {{ section.settings.text_color }};
+    --announcement-separator: {{ section.settings.separator_color }};
+    --announcement-height: {{ section.settings.bar_height }}px;
+    --announcement-speed: {{ section.settings.animation_speed }}s;
+  "
+>
+  <div class="announcement-bar__track">
+    {%- for i in (1..4) -%}
+      {%- for block in section.blocks -%}
+        <span class="announcement-bar__item" {{ block.shopify_attributes }}>
+          <span class="announcement-bar__text">{{ block.settings.text }}</span>
+          <span class="announcement-bar__separator">{{ section.settings.separator_char }}</span>
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  .announcement-bar {
+    background-color: var(--announcement-bg);
+    height: var(--announcement-height);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 60;
+  }
+
+  .announcement-bar__track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    animation: marquee var(--announcement-speed) linear infinite;
+    will-change: transform;
+  }
+
+  .announcement-bar__item {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .announcement-bar__text {
+    color: var(--announcement-text);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .announcement-bar__separator {
+    color: var(--announcement-separator);
+    margin: 0 24px;
+    font-size: 10px;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-25%);
+    }
+  }
+</style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "tag": "section",
+  "class": "announcement-bar-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement_bar",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "text",
+      "id": "separator_char",
+      "label": "Separator character",
+      "default": "✦"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height (px)",
+      "min": 28,
+      "max": 50,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Animation speed (seconds)",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "info": "Lower = faster"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "ENVÍO GRATIS EN COMPRAS DESDE $1,499"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "message",
+          "settings": {
+            "text": "ᴇɴᴠÍᴏ ɢʀᴀᴛɪꜱ ᴇɴ ᴄᴏᴍᴘʀᴀꜱ ᴅᴇꜱᴅᴇ $1,499"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "ᴘᴀɢᴀ ᴄᴏɴ ᴘᴀʏᴘᴀʟ ʜᴀꜱᴛᴀ 6 ᴍꜱɪ"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "ᴘᴀɢᴀ ᴇɴ Qᴜɪɴᴄᴇɴᴀꜱ ᴄᴏɴ ᴋᴜᴇꜱᴋɪᴘᴀʏ ʏ ᴀᴘʟᴀᴢᴏ"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,80 @@
+<section 
+  class="trust"
+  data-section-id="{{ section.id }}"
+  data-section-type="trust"
+>
+  <div class="trust__container">
+    {%- for block in section.blocks -%}
+      {% render 'trust-badge', block: block, index: forloop.index %}
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+  .trust {
+    padding: 4rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .trust__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .trust__container {
+      padding: 0 3rem;
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Badges",
+  "tag": "section",
+  "class": "trust-section",
+
+  "settings": [],
+
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Título del badge" },
+        { "type": "text", "id": "description", "label": "Description", "default": "Descripción del badge" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Shipping" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "refresh", "label": "Returns" },
+            { "value": "shield", "label": "Security" }
+          ],
+          "default": "truck"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Trust Badges",
+      "blocks": [
+        { "type": "badge", "settings": { "title": "Envío Gratis", "description": "En pedidos mayores a $75", "icon": "truck" } },
+        { "type": "badge", "settings": { "title": "Libre de Crueldad", "description": "Productos 100% veganos", "icon": "heart" } },
+        { "type": "badge", "settings": { "title": "Devoluciones Fáciles", "description": "Política de 30 días", "icon": "refresh" } },
+        { "type": "badge", "settings": { "title": "Pago Seguro", "description": "Checkout encriptado SSL", "icon": "shield" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

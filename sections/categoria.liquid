@@ -1,0 +1,514 @@
+{% schema %}
+{
+  "name": "Categoría Soleil",
+  "settings": [
+    {
+      "type": "header",
+      "content": "HERO — Banner Full Width"
+    },
+    {
+      "id": "hero_image",
+      "type": "image_picker",
+      "label": "Imagen del Hero"
+    },
+    {
+      "id": "hero_height_desktop",
+      "type": "range",
+      "label": "Altura del Hero (Desktop)",
+      "min": 300,
+      "max": 700,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "id": "hero_height_mobile",
+      "type": "range",
+      "label": "Altura del Hero (Mobile)",
+      "min": 200,
+      "max": 500,
+      "step": 10,
+      "default": 300
+    },
+    {
+      "id": "hero_overlay_opacity",
+      "type": "range",
+      "label": "Opacidad del overlay",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "id": "hero_title",
+      "type": "text",
+      "label": "Título del Hero"
+    },
+    {
+      "id": "hero_subtitle",
+      "type": "text",
+      "label": "Subtítulo del Hero"
+    },
+    {
+      "id": "hero_text",
+      "type": "textarea",
+      "label": "Texto editorial"
+    },
+    {
+      "id": "hero_button_text",
+      "type": "text",
+      "label": "Texto del botón"
+    },
+    {
+      "id": "hero_button_link",
+      "type": "url",
+      "label": "Link del botón"
+    },
+
+    {
+      "type": "header",
+      "content": "Colección y Grid"
+    },
+    {
+      "id": "collection",
+      "type": "collection",
+      "label": "Colección a mostrar"
+    },
+    {
+      "id": "products_per_page",
+      "type": "range",
+      "label": "Productos por página",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+
+    {
+      "type": "header",
+      "content": "Banner lateral"
+    },
+    {
+      "id": "side_banner_image",
+      "type": "image_picker",
+      "label": "Imagen del banner lateral"
+    },
+    {
+      "id": "side_banner_title",
+      "type": "text",
+      "label": "Título del banner"
+    },
+    {
+      "id": "side_banner_text",
+      "type": "textarea",
+      "label": "Texto del banner"
+    },
+    {
+      "id": "side_banner_link",
+      "type": "url",
+      "label": "Link del banner"
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "manual_filter",
+      "name": "Filtro manual",
+      "settings": [
+        {
+          "id": "filter_title",
+          "type": "text",
+          "label": "Título del filtro"
+        },
+        {
+          "id": "filter_options",
+          "type": "textarea",
+          "label": "Opciones (una por línea)"
+        }
+      ]
+    },
+    {
+      "type": "texto",
+      "name": "Bloque de texto",
+      "settings": [
+        {
+          "id": "text",
+          "type": "textarea",
+          "label": "Texto"
+        }
+      ]
+    },
+    {
+      "type": "imagen",
+      "name": "Imagen",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Imagen"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Categoría Soleil"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="categoria-wrapper">
+
+  {%- comment -%}
+  ------------------------------------------------------------
+  HERO FULL WIDTH — TEXTO A LA IZQUIERDA
+  ------------------------------------------------------------
+  {%- endcomment -%}
+
+  <section class="categoria-hero" 
+    style="
+      background-image: url('{{ section.settings.hero_image | image_url }}');
+      height: {{ section.settings.hero_height_desktop }}px;
+    "
+  >
+    <div class="categoria-hero__overlay" 
+      style="opacity: {{ section.settings.hero_overlay_opacity }};">
+    </div>
+
+    <div class="categoria-hero__content">
+      {% if section.settings.hero_title != blank %}
+        <h1 class="categoria-hero__title">{{ section.settings.hero_title }}</h1>
+      {% endif %}
+
+      {% if section.settings.hero_subtitle != blank %}
+        <p class="categoria-hero__subtitle">{{ section.settings.hero_subtitle }}</p>
+      {% endif %}
+
+      {% if section.settings.hero_text != blank %}
+        <p class="categoria-hero__text">{{ section.settings.hero_text }}</p>
+      {% endif %}
+
+      {% if section.settings.hero_button_text != blank %}
+        <a href="{{ section.settings.hero_button_link }}" class="categoria-hero__button">
+          {{ section.settings.hero_button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  {%- comment -%}
+  ------------------------------------------------------------
+  BREADCRUMBS
+  ------------------------------------------------------------
+  {%- endcomment -%}
+
+  <nav class="categoria-breadcrumbs">
+    <a href="/">Inicio</a> / 
+    <span>{{ section.settings.hero_title }}</span>
+  </nav>
+
+  {%- comment -%}
+  ------------------------------------------------------------
+  LAYOUT PRINCIPAL: SIDEBAR + GRID
+  ------------------------------------------------------------
+  {%- endcomment -%}
+
+  <div class="categoria-layout">
+
+    {%- comment -%}
+    ------------------------------------------------------------
+    SIDEBAR STICKY — FILTROS AUTOMÁTICOS + MANUALES
+    ------------------------------------------------------------
+    {%- endcomment -%}
+
+    <aside class="categoria-sidebar">
+
+      <h3 class="categoria-sidebar__title">Filtros</h3>
+
+      {%- comment -%}
+      Filtros automáticos (Shopify Search & Discovery)
+      {%- endcomment -%}
+
+      {% if section.settings.collection %}
+        <div class="categoria-filter-group">
+          <h4 class="categoria-filter-group__title">Filtros automáticos</h4>
+          {{ section.settings.collection | filter }}
+        </div>
+      {% endif %}
+
+      {%- comment -%}
+      Filtros manuales (bloques)
+      {%- endcomment -%}
+
+      {% for block in section.blocks %}
+        {% if block.type == 'manual_filter' %}
+          <div class="categoria-filter-group">
+            <button class="categoria-filter-group__header" data-accordion>
+              {{ block.settings.filter_title }}
+              <span class="chevron">⌄</span>
+            </button>
+
+            <div class="categoria-filter-group__content">
+              {% assign options = block.settings.filter_options | split: '\n' %}
+              {% for opt in options %}
+                <label class="categoria-filter-option">
+                  <input type="checkbox" value="{{ opt | strip }}">
+                  <span>{{ opt | strip }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </aside>
+
+    {%- comment -%}
+    ------------------------------------------------------------
+    CONTENIDO PRINCIPAL: TOOLBAR + GRID + BANNER LATERAL
+    ------------------------------------------------------------
+    {%- endcomment -%}
+
+    <div class="categoria-content">
+
+      {%- comment -%}
+      TOOLBAR SUPERIOR
+      ------------------------------------------------------------
+      {%- endcomment -%}
+
+      <div class="categoria-toolbar">
+        <div class="categoria-toolbar__left">
+          {% if section.settings.collection %}
+            <span>{{ section.settings.collection.products_count }} productos</span>
+          {% endif %}
+        </div>
+
+        <div class="categoria-toolbar__right">
+          <select class="categoria-sort">
+            <option value="best-selling">Más vendidos</option>
+            <option value="price-ascending">Precio: menor a mayor</option>
+            <option value="price-descending">Precio: mayor a menor</option>
+            <option value="created-descending">Nuevos</option>
+          </select>
+
+          <button class="categoria-filter-button-mobile">Filtros</button>
+        </div>
+      </div>
+
+      {%- comment -%}
+      GRID DE PRODUCTOS
+      ------------------------------------------------------------
+      {%- endcomment -%}
+
+      <div class="categoria-grid">
+        {% if section.settings.collection %}
+          {% paginate section.settings.collection.products by section.settings.products_per_page %}
+            {% for product in section.settings.collection.products %}
+              <div class="categoria-product-card" data-animate="fadeInUp">
+
+                <a href="{{ product.url }}" class="categoria-product-card__image">
+                  <img src="{{ product.featured_image | image_url: width: 400 }}">
+                </a>
+
+                <div class="categoria-product-card__info">
+                  <span class="categoria-product-card__vendor">{{ product.vendor }}</span>
+                  <a href="{{ product.url }}" class="categoria-product-card__title">
+                    {{ product.title }}
+                  </a>
+                  <span class="categoria-product-card__price">
+                    {{ product.price | money }}
+                  </span>
+                </div>
+
+              </div>
+            {% endfor %}
+
+            {{ paginate | default_pagination }}
+          {% endpaginate %}
+        {% endif %}
+      </div>
+
+    </div>
+
+    {%- comment -%}
+    ------------------------------------------------------------
+    BANNER LATERAL
+    ------------------------------------------------------------
+    {%- endcomment -%}
+
+    {% if section.settings.side_banner_image %}
+      <aside class="categoria-side-banner">
+        <img src="{{ section.settings.side_banner_image | image_url }}" class="categoria-side-banner__img">
+        <h3>{{ section.settings.side_banner_title }}</h3>
+        <p>{{ section.settings.side_banner_text }}</p>
+        <a href="{{ section.settings.side_banner_link }}" class="categoria-side-banner__button">Ver más</a>
+      </aside>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<style>
+/* HERO */
+.categoria-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding-left: 4rem;
+  color: white;
+}
+.categoria-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: black;
+}
+.categoria-hero__content {
+  position: relative;
+  max-width: 480px;
+  z-index: 2;
+}
+.categoria-hero__title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+.categoria-hero__button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.8rem 1.6rem;
+  background: white;
+  color: black;
+  border-radius: 4px;
+}
+
+/* BREADCRUMBS */
+.categoria-breadcrumbs {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+/* LAYOUT */
+.categoria-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 2rem;
+}
+
+/* SIDEBAR */
+.categoria-sidebar {
+  position: sticky;
+  top: 120px;
+  height: max-content;
+}
+.categoria-filter-group {
+  margin-bottom: 1rem;
+}
+.categoria-filter-group__header {
+  width: 100%;
+  background: none;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.categoria-filter-group__content {
+  display: none;
+  padding: 0.5rem 0;
+}
+.categoria-filter-option {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+/* GRID */
+.categoria-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+.categoria-product-card {
+  transition: all 0.2s ease;
+}
+.categoria-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* BANNER LATERAL */
+.categoria-side-banner {
+  position: sticky;
+  top: 120px;
+  text-align: center;
+}
+.categoria-side-banner__img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* MOBILE */
+@media(max-width: 900px){
+  .categoria-layout {
+    grid-template-columns: 1fr;
+  }
+  .categoria-sidebar {
+    display: none;
+  }
+  .categoria-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Miniaturas de producto */
+.categoria-product-card__image img,
+.collection-product-card__image img {
+  width : 140px;
+  height: 140px;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  border-radius: 6px;
+}
+/* Centrar la imagen dentro de la tarjeta*/
+.categoria-product-card__image,
+.collection-product-card__image {
+display: flex;
+justify-content: center;
+alighn-items: center;
+padding: 0.5rem 0;
+}
+/* Ajustar el grid para que entren mas productos */
+.categoria-grid,
+.collection-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+/* En pantalla mediana */
+@media (max-width: 900px) {
+  .categoria-grid,
+  .coleccion-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* En pantallas pequeñas */
+@media (max-width: 600px) {
+  .categoria-grid,
+  .collection-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
+<script>
+document.querySelectorAll("[data-accordion]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const content = btn.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+  });
+});
+</script>

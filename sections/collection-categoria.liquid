@@ -1,0 +1,360 @@
+{% schema %}
+{
+  "name": "Colección Soleil",
+  "settings": [
+    {
+      "type": "header",
+      "content": "HERO — Banner Full Width"
+    },
+    {
+      "id": "hero_image",
+      "type": "image_picker",
+      "label": "Imagen del Hero"
+    },
+    {
+      "id": "hero_height_desktop",
+      "type": "range",
+      "label": "Altura del Hero (Desktop)",
+      "min": 300,
+      "max": 700,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "id": "hero_height_mobile",
+      "type": "range",
+      "label": "Altura del Hero (Mobile)",
+      "min": 200,
+      "max": 500,
+      "step": 10,
+      "default": 300
+    },
+    {
+      "id": "hero_overlay_opacity",
+      "type": "range",
+      "label": "Opacidad del overlay",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "id": "hero_title_override",
+      "type": "text",
+      "label": "Título personalizado (opcional)"
+    },
+    {
+      "id": "hero_subtitle",
+      "type": "text",
+      "label": "Subtítulo"
+    },
+    {
+      "id": "hero_text",
+      "type": "textarea",
+      "label": "Texto editorial"
+    },
+    {
+      "id": "hero_button_text",
+      "type": "text",
+      "label": "Texto del botón"
+    },
+    {
+      "id": "hero_button_link",
+      "type": "url",
+      "label": "Link del botón"
+    },
+
+    {
+      "type": "header",
+      "content": "Banner lateral"
+    },
+    {
+      "id": "side_banner_image",
+      "type": "image_picker",
+      "label": "Imagen del banner lateral"
+    },
+    {
+      "id": "side_banner_title",
+      "type": "text",
+      "label": "Título del banner"
+    },
+    {
+      "id": "side_banner_text",
+      "type": "textarea",
+      "label": "Texto del banner"
+    },
+    {
+      "id": "side_banner_link",
+      "type": "url",
+      "label": "Link del banner"
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "manual_filter",
+      "name": "Filtro manual",
+      "settings": [
+        {
+          "id": "filter_title",
+          "type": "text",
+          "label": "Título del filtro"
+        },
+        {
+          "id": "filter_options",
+          "type": "textarea",
+          "label": "Opciones (una por línea)"
+        }
+      ]
+    },
+    {
+      "type": "texto",
+      "name": "Bloque de texto",
+      "settings": [
+        {
+          "id": "text",
+          "type": "textarea",
+          "label": "Texto"
+        }
+      ]
+    },
+    {
+      "type": "imagen",
+      "name": "Imagen",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Imagen"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Colección Soleil"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="coleccion-wrapper">
+
+  {%- comment -%}
+  HERO FULL WIDTH — TEXTO A LA IZQUIERDA
+  {%- endcomment -%}
+
+  <section
+    class="coleccion-hero"
+    style="
+      {% if section.settings.hero_image %}
+        background-image: url('{{ section.settings.hero_image | image_url }}');
+      {% endif %}
+      height: {{ section.settings.hero_height_desktop }}px;
+    "
+  >
+    <div
+      class="coleccion-hero__overlay"
+      style="opacity: {{ section.settings.hero_overlay_opacity }};"
+    ></div>
+
+    <div class="coleccion-hero__content">
+      <h1 class="coleccion-hero__title">
+        {% if section.settings.hero_title_override != blank %}
+          {{ section.settings.hero_title_override }}
+        {% else %}
+          {{ collection.title }}
+        {% endif %}
+      </h1>
+
+      {% if section.settings.hero_subtitle != blank %}
+        <p class="coleccion-hero__subtitle">{{ section.settings.hero_subtitle }}</p>
+      {% endif %}
+
+      {% if section.settings.hero_text != blank %}
+        <p class="coleccion-hero__text">{{ section.settings.hero_text }}</p>
+      {% endif %}
+
+      {% if section.settings.hero_button_text != blank %}
+        <a href="{{ section.settings.hero_button_link }}" class="coleccion-hero__button">
+          {{ section.settings.hero_button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  {%- comment -%}
+  BREADCRUMBS
+  {%- endcomment -%}
+
+  <nav class="coleccion-breadcrumbs">
+    <a href="/">Inicio</a> / <span>{{ collection.title }}</span>
+  </nav>
+
+  {%- comment -%}
+  LAYOUT PRINCIPAL
+  {%- endcomment -%}
+
+  <div class="coleccion-layout">
+
+    {%- comment -%}
+    SIDEBAR STICKY
+    {%- endcomment -%}
+
+    <aside class="coleccion-sidebar">
+      <h3 class="coleccion-sidebar__title">Filtros</h3>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'manual_filter' %}
+          <div class="coleccion-filter-group">
+            <button class="coleccion-filter-group__header" data-accordion>
+              {{ block.settings.filter_title }}
+              <span class="chevron">⌄</span>
+            </button>
+
+            <div class="coleccion-filter-group__content">
+              {% assign options = block.settings.filter_options | split: '\n' %}
+              {% for opt in options %}
+                {% assign clean = opt | strip %}
+                {% if clean != blank %}
+                  <label class="coleccion-filter-option">
+                    <input type="checkbox" value="{{ clean }}">
+                    <span>{{ clean }}</span>
+                  </label>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </aside>
+
+    {%- comment -%}
+    CONTENIDO PRINCIPAL
+    {%- endcomment -%}
+
+    <div class="coleccion-content">
+
+      <div class="coleccion-toolbar">
+        <span>{{ collection.products_count }} productos</span>
+
+        <select class="coleccion-sort">
+          <option value="best-selling">Más vendidos</option>
+          <option value="price-ascending">Precio: menor a mayor</option>
+          <option value="price-descending">Precio: mayor a menor</option>
+          <option value="created-descending">Nuevos</option>
+        </select>
+      </div>
+
+      <div class="coleccion-grid">
+        {% paginate collection.products by 24 %}
+          {% for product in collection.products %}
+            <div class="coleccion-product-card" data-animate="fadeInUp">
+              <a href="{{ product.url }}" class="coleccion-product-card__image">
+                <img src="{{ product.featured_image | image_url: width: 400 }}">
+              </a>
+
+              <div class="coleccion-product-card__info">
+                <span class="coleccion-product-card__vendor">{{ product.vendor }}</span>
+                <a href="{{ product.url }}" class="coleccion-product-card__title">{{ product.title }}</a>
+                <span class="coleccion-product-card__price">{{ product.price | money }}</span>
+              </div>
+            </div>
+          {% endfor %}
+
+          <div class="coleccion-pagination">
+            {{ paginate | default_pagination }}
+          </div>
+        {% endpaginate %}
+      </div>
+
+    </div>
+
+    {%- comment -%}
+    BANNER LATERAL
+    {%- endcomment -%}
+
+    {% if section.settings.side_banner_image %}
+      <aside class="coleccion-side-banner">
+        <img src="{{ section.settings.side_banner_image | image_url }}" class="coleccion-side-banner__img">
+        <h3>{{ section.settings.side_banner_title }}</h3>
+        <p>{{ section.settings.side_banner_text }}</p>
+        <a href="{{ section.settings.side_banner_link }}" class="coleccion-side-banner__button">Ver más</a>
+      </aside>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<style>
+/* HERO */
+.coleccion-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding-left: 4rem;
+  color: white;
+}
+.coleccion-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: black;
+}
+.coleccion-hero__content {
+  position: relative;
+  max-width: 480px;
+  z-index: 2;
+}
+.coleccion-hero__title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+/* BREADCRUMBS */
+.coleccion-breadcrumbs {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+/* LAYOUT */
+.coleccion-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 2rem;
+}
+
+/* SIDEBAR */
+.coleccion-sidebar {
+  position: sticky;
+  top: 120px;
+  height: max-content;
+}
+
+/* GRID */
+.coleccion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* BANNER LATERAL */
+.coleccion-side-banner {
+  position: sticky;
+  top: 120px;
+  text-align: center;
+}
+</style>
+
+<script>
+document.querySelectorAll("[data-accordion]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const content = btn.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+  });
+});
+</script>

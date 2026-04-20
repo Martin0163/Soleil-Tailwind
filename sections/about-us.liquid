@@ -1,0 +1,83 @@
+<section class="w-full py-20 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
+
+    <!-- Imagen -->
+    {% if section.settings.image != blank %}
+      <div class="w-full">
+        <img 
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="Sobre nosotros"
+          class="w-full h-auto rounded-lg object-cover shadow-sm"
+        >
+      </div>
+    {% endif %}
+
+    <!-- Contenido -->
+    <div class="w-full">
+
+      {% if section.settings.heading != blank %}
+        <h2 class="font-serif text-4xl md:text-5xl font-semibold mb-6 leading-tight">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <p class="font-body text-lg text-black/80 leading-relaxed mb-8">
+          {{ section.settings.text }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a 
+          href="{{ section.settings.button_link }}"
+          class="inline-block bg-black text-white font-ui text-sm px-8 py-3 rounded-md hover:bg-black/80 transition-colors"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sobre nosotros",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Nuestra historia"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Descripción",
+      "default": "Creamos productos diseñados para resaltar tu belleza natural, con ingredientes de alta calidad y un compromiso profundo con el bienestar y la autenticidad."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Conoce más"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sobre nosotros"
+    }
+  ]
+}
+{% endschema %}

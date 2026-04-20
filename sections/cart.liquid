@@ -1,0 +1,36 @@
+<h1>Carrito</h1>
+
+<form action="{{ routes.cart_url }}" method="post">
+  <table>
+    {% for item in cart.items %}
+      <tr>
+        <td>
+          {% if item.image %}
+            {% render 'image', image: item.image, url: item.url %}
+          {% else %}
+            <div style="width:80px;height:80px;background:#f5f5f5;border-radius:8px;"></div>
+          {% endif %}
+        </td>
+
+        <td>
+          <p>{{ item.product.title }}</p>
+          <a href="{{ item.url_to_remove }}">Eliminar</a>
+        </td>
+
+        <td>
+          <input type="number" name="updates[]" value="{{ item.quantity }}" min="1">
+          <input type="submit" value="Actualizar">
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <input type="submit" name="checkout" value="Proceder al pago">
+</form>
+
+{% schema %}
+{
+  "name": "t:general.cart",
+  "settings": []
+}
+{% endschema %}

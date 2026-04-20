@@ -1,0 +1,417 @@
+<footer class="footer" data-section-id="{{ section.id }}" data-section-type="footer">
+  {%- comment -%} Newsletter {%- endcomment -%}
+  {%- if section.settings.show_newsletter -%}
+  <div class="footer__newsletter">
+    <div class="footer__newsletter-content">
+      <h3 class="footer__newsletter-title">{{ section.settings.newsletter_heading }}</h3>
+      <p class="footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+      
+      {% form 'customer', class: 'footer__newsletter-form' %}
+        <input 
+          type="email" 
+          name="contact[email]"
+          placeholder="{{ section.settings.newsletter_placeholder }}"
+          class="footer__newsletter-input"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="btn btn--primary">
+          {{ section.settings.newsletter_button }}
+        </button>
+      {% endform %}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} Main Footer {%- endcomment -%}
+  <div class="footer__main">
+    <div class="footer__container">
+      <div class="footer__grid">
+        {%- comment -%} Brand Column {%- endcomment -%}
+        <div class="footer__brand">
+          {%- if section.settings.logo != blank -%}
+            <img 
+              src="{{ section.settings.logo | image_url: width: 150 }}" 
+              alt="{{ shop.name }}"
+              class="footer__logo-image"
+              loading="lazy"
+            >
+          {%- else -%}
+            <h2 class="footer__logo">{{ section.settings.logo_text | default: 'SOLEIL' }}</h2>
+          {%- endif -%}
+          <p class="footer__brand-text">{{ section.settings.brand_text }}</p>
+        </div>
+
+        {%- comment -%} Menu Columns {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'menu' -%}
+            <div class="footer__column" {{ block.shopify_attributes }}>
+              <h4 class="footer__column-title">{{ block.settings.title }}</h4>
+              <ul class="footer__links">
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Bottom Bar {%- endcomment -%}
+      <div class="footer__bottom">
+        <p class="footer__copyright">
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text }}
+        </p>
+        
+        <div class="footer__social">
+          {%- if settings.social_instagram != blank -%}
+            <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              {% render 'icon-instagram' %}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_facebook != blank -%}
+            <a href="{{ settings.social_facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              {% render 'icon-facebook' %}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_twitter != blank -%}
+            <a href="{{ settings.social_twitter }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              {% render 'icon-twitter' %}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_tiktok != blank -%}
+            <a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              {% render 'icon-tiktok' %}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: #FFF8E7;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .footer__newsletter {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__newsletter {
+      padding: 6rem 3rem;
+    }
+  }
+
+  .footer__newsletter-content {
+    max-width: 672px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .footer__newsletter-title {
+    font-family: var(--font-accent);
+    font-size: 1.875rem;
+    font-style: italic;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__newsletter-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .footer__newsletter-text {
+    color: #4B5563;
+    margin-bottom: 2rem;
+  }
+
+  .footer__newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 448px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 640px) {
+    .footer__newsletter-form {
+      flex-direction: row;
+    }
+  }
+
+  .footer__newsletter-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .footer__newsletter-input:focus {
+    border-color: #000;
+  }
+
+  .footer__main {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .footer__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__container {
+      padding: 3rem;
+    }
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  .footer__brand {
+    grid-column: span 2;
+  }
+
+  @media (min-width: 768px) {
+    .footer__brand {
+      grid-column: span 1;
+    }
+  }
+
+  .footer__logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .footer__logo-image {
+    margin-bottom: 1rem;
+  }
+
+  .footer__brand-text {
+    font-size: 0.875rem;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .footer__column-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .footer__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer__links a {
+    font-size: 0.875rem;
+    color: #4B5563;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+
+  .footer__links a:hover {
+    color: #000;
+  }
+
+  .footer__bottom {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .footer__copyright {
+    font-size: 0.75rem;
+    color: #6B7280;
+    margin: 0;
+  }
+
+  .footer__social {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer__social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    color: #000;
+  }
+
+  .footer__social a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .footer__social svg {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "section",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Únete a la Familia Soleil"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Text",
+      "default": "Suscríbete para recibir ofertas exclusivas, acceso anticipado a nuevos productos y tips de belleza."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Input placeholder",
+      "default": "Ingresa tu email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Button text",
+      "default": "Suscribirse"
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text (if no image)",
+      "default": "SOLEIL"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_text",
+      "label": "Brand description",
+      "default": "Productos de belleza de lujo para la mujer moderna. Irradia confianza, abraza tu brillo."
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "Todos los derechos reservados."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column title",
+          "default": "Tienda"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Tienda"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Ayuda"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Nosotros"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

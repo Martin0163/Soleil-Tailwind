@@ -1,0 +1,246 @@
+<section 
+  class="story"
+  data-section-id="{{ section.id }}"
+  data-section-type="story"
+>
+  <div class="story__container">
+    <div class="story__content" data-animate="fadeInUp">
+      {%- if section.settings.badge_text != blank -%}
+        <span class="story__badge">{{ section.settings.badge_text }}</span>
+      {%- endif -%}
+      
+      <h2 class="story__title">{{ section.settings.heading | newline_to_br }}</h2>
+      
+      {%- if section.settings.description != blank -%}
+        <p class="story__description">{{ section.settings.description }}</p>
+      {%- endif -%}
+      
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn btn--secondary">
+          {{ section.settings.button_text }}
+          {% render 'icon-arrow-right' %}
+        </a>
+      {%- endif -%}
+    </div>
+    
+    <div class="story__image-wrapper" data-animate="fadeInRight">
+      <div class="story__image-container">
+        {%- if section.settings.image != blank -%}
+          <img 
+            src="{{ section.settings.image | image_url: width: 800 }}" 
+            alt="{{ section.settings.image.alt | default: section.settings.heading }}"
+            class="story__image"
+            loading="lazy"
+          >
+        {%- else -%}
+          <img 
+            src="https://images.unsplash.com/photo-1561450863-83d1391238bb?w=800&q=80" 
+            alt="{{ section.settings.heading }}"
+            class="story__image"
+            loading="lazy"
+          >
+        {%- endif -%}
+        
+        {%- if section.settings.years_number != blank -%}
+          <div class="story__badge-box">
+            <span class="story__badge-number">{{ section.settings.years_number }}</span>
+            <span class="story__badge-text">{{ section.settings.years_text }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    padding: 6rem 0;
+    background-color: #FFF8E7;
+  }
+
+  @media (min-width: 768px) {
+    .story {
+      padding: 8rem 0;
+    }
+  }
+
+  .story__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .story__container {
+      padding: 0 3rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  .story__content {
+    order: 2;
+  }
+
+  @media (min-width: 768px) {
+    .story__content {
+      order: 1;
+    }
+  }
+
+  .story__badge {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: #E6A500;
+    margin-bottom: 1.5rem;
+  }
+
+  .story__title {
+    font-family: var(--font-accent);
+    font-size: 2.25rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .story__title {
+      font-size: 3rem;
+    }
+  }
+
+  .story__description {
+    color: #4B5563;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .story__image-wrapper {
+    order: 1;
+  }
+
+  @media (min-width: 768px) {
+    .story__image-wrapper {
+      order: 2;
+    }
+  }
+
+  .story__image-container {
+    position: relative;
+  }
+
+  .story__image {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+  }
+
+  .story__badge-box {
+    position: absolute;
+    bottom: -24px;
+    left: -24px;
+    background-color: #FFD700;
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .story__badge-box {
+      padding: 2rem;
+    }
+  }
+
+  .story__badge-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #000;
+    line-height: 1;
+  }
+
+  @media (min-width: 768px) {
+    .story__badge-number {
+      font-size: 3rem;
+    }
+  }
+
+  .story__badge-text {
+    display: block;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(0, 0, 0, 0.7);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Story",
+  "tag": "section",
+  "class": "story-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Nuestra Historia"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Belleza que celebra\na cada mujer"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "En Soleil, creemos que la verdadera belleza irradia desde adentro. Nuestra colección cuidadosamente seleccionada de productos de belleza de lujo está diseñada para realzar tu brillo natural, no ocultarlo. Cada producto está elaborado con los mejores ingredientes y un compromiso con la sustentabilidad."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Conoce Más"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Badge Box"
+    },
+    {
+      "type": "text",
+      "id": "years_number",
+      "label": "Number",
+      "default": "10+"
+    },
+    {
+      "type": "text",
+      "id": "years_text",
+      "label": "Text",
+      "default": "Años de Excelencia"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Story"
+    }
+  ]
+}
+{% endschema %}

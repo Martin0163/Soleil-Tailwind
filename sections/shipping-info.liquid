@@ -1,0 +1,118 @@
+<section class="w-full py-16 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-12">
+
+    {% if section.settings.title != blank %}
+      <h2 class="font-heading text-2xl md:text-3xl font-semibold mb-12 text-center">
+        {{ section.settings.title }}
+      </h2>
+    {% endif %}
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+
+      <!-- Beneficio 1 -->
+      <div class="text-center flex flex-col items-center">
+        {% if section.settings.icon_1 != blank %}
+          <img 
+            src="{{ section.settings.icon_1 | image_url: width: 200 }}"
+            alt="Beneficio 1"
+            class="h-14 w-auto mb-4 object-contain"
+          >
+        {% endif %}
+        <h3 class="font-heading text-lg mb-2">{{ section.settings.title_1 }}</h3>
+        <p class="font-body text-sm text-black/70">{{ section.settings.text_1 }}</p>
+      </div>
+
+      <!-- Beneficio 2 -->
+      <div class="text-center flex flex-col items-center">
+        {% if section.settings.icon_2 != blank %}
+          <img 
+            src="{{ section.settings.icon_2 | image_url: width: 200 }}"
+            alt="Beneficio 2"
+            class="h-14 w-auto mb-4 object-contain"
+          >
+        {% endif %}
+        <h3 class="font-heading text-lg mb-2">{{ section.settings.title_2 }}</h3>
+        <p class="font-body text-sm text-black/70">{{ section.settings.text_2 }}</p>
+      </div>
+
+      <!-- Beneficio 3 -->
+      <div class="text-center flex flex-col items-center">
+        {% if section.settings.icon_3 != blank %}
+          <img 
+            src="{{ section.settings.icon_3 | image_url: width: 200 }}"
+            alt="Beneficio 3"
+            class="h-14 w-auto mb-4 object-contain"
+          >
+        {% endif %}
+        <h3 class="font-heading text-lg mb-2">{{ section.settings.title_3 }}</h3>
+        <p class="font-body text-sm text-black/70">{{ section.settings.text_3 }}</p>
+      </div>
+
+      <!-- Beneficio 4 -->
+      <div class="text-center flex flex-col items-center">
+        {% if section.settings.icon_4 != blank %}
+          <img 
+            src="{{ section.settings.icon_4 | image_url: width: 200 }}"
+            alt="Beneficio 4"
+            class="h-14 w-auto mb-4 object-contain"
+          >
+        {% endif %}
+        <h3 class="font-heading text-lg mb-2">{{ section.settings.title_4 }}</h3>
+        <p class="font-body text-sm text-black/70">{{ section.settings.text_4 }}</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Envíos / Beneficios",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título principal",
+      "default": "Nuestros beneficios"
+    },
+
+    {
+      "type": "header",
+      "content": "Beneficio 1"
+    },
+    { "type": "image_picker", "id": "icon_1", "label": "Ícono 1" },
+    { "type": "text", "id": "title_1", "label": "Título 1", "default": "Envíos rápidos" },
+    { "type": "text", "id": "text_1", "label": "Descripción 1", "default": "Recibe tu pedido en tiempo récord." },
+
+    {
+      "type": "header",
+      "content": "Beneficio 2"
+    },
+    { "type": "image_picker", "id": "icon_2", "label": "Ícono 2" },
+    { "type": "text", "id": "title_2", "label": "Título 2", "default": "Pagos seguros" },
+    { "type": "text", "id": "text_2", "label": "Descripción 2", "default": "Tus datos están protegidos con tecnología avanzada." },
+
+    {
+      "type": "header",
+      "content": "Beneficio 3"
+    },
+    { "type": "image_picker", "id": "icon_3", "label": "Ícono 3" },
+    { "type": "text", "id": "title_3", "label": "Título 3", "default": "Atención personalizada" },
+    { "type": "text", "id": "text_3", "label": "Descripción 3", "default": "Estamos aquí para ayudarte en cada paso." },
+
+    {
+      "type": "header",
+      "content": "Beneficio 4"
+    },
+    { "type": "image_picker", "id": "icon_4", "label": "Ícono 4" },
+    { "type": "text", "id": "title_4", "label": "Título 4", "default": "Garantía de satisfacción" },
+    { "type": "text", "id": "text_4", "label": "Descripción 4", "default": "Productos de calidad garantizada." }
+  ],
+  "presets": [
+    {
+      "name": "Envíos / Beneficios"
+    }
+  ]
+}
+{% endschema %}

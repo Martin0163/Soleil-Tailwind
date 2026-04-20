@@ -1,0 +1,96 @@
+<section class="w-full py-16 bg-white">
+  <div class="max-w-[1440px] mx-auto px-6 md:px-12">
+
+    {% if section.settings.title != blank %}
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold mb-10 text-center">
+        {{ section.settings.title }}
+      </h2>
+    {% endif %}
+
+    {% assign collection = collections[section.settings.collection] %}
+
+    {% if collection != blank and collection.products_count > 0 %}
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+        {% for product in collection.products limit: section.settings.limit %}
+          <div class="group">
+
+            <!-- Imagen -->
+            <a href="{{ product.url }}" class="block overflow-hidden rounded-lg">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.title }}"
+                  class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                >
+              {% endif %}
+            </a>
+
+            <!-- Título -->
+            <a href="{{ product.url }}">
+              <h3 class="font-ui text-base mt-4 mb-1">
+                {{ product.title }}
+              </h3>
+            </a>
+
+            <!-- Precio -->
+            <p class="font-ui text-sm text-black/70 mb-3">
+              {{ product.price | money }}
+            </p>
+
+            <!-- Botón agregar al carrito -->
+            <form method="post" action="/cart/add">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button 
+                type="submit"
+                class="w-full bg-black text-white font-ui text-sm py-2 rounded-md hover:bg-black/80 transition-colors"
+              >
+                Agregar al carrito
+              </button>
+            </form>
+
+          </div>
+        {% endfor %}
+
+      </div>
+
+    {% else %}
+      <p class="text-center text-black/60 font-ui">No hay productos disponibles.</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Productos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Nuestros productos"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Cantidad de productos",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Productos"
+    }
+  ]
+}
+{% endschema %}
